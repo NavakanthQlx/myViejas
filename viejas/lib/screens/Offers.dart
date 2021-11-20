@@ -15,14 +15,6 @@ class _OffersState extends State<Offers> {
         child: Container(
           width: 100.0,
           height: 100.0,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: AssetImage('images/temp.png'),
-            ),
-            borderRadius: BorderRadius.all(Radius.circular(50.0)),
-            color: Colors.redAccent,
-          ),
         ),
       ),
     );

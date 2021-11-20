@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:viejas/screens/WebViewScreen.dart';
 
 class Promotions extends StatefulWidget {
   const Promotions({Key? key}) : super(key: key);
@@ -60,7 +61,12 @@ class _PromotionsState extends State<Promotions> {
                 style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => WebViewScreen()),
+                  );
+                },
                 child: Text(
                   'Get details of all promotions',
                   textAlign: TextAlign.end,
