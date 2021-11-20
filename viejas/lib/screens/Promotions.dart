@@ -17,19 +17,23 @@ class _PromotionsState extends State<Promotions> {
             itemCount: 20,
             itemBuilder: (contex, index) {
               if (index == 0) {
-                return Container(
-                  height: 280.0,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage('images/temp.png'),
-                    ),
-                  ),
-                );
+                return _buildHeaderImage();
               } else {
                 return _buildPromotionCell();
               }
             }),
+      ),
+    );
+  }
+
+  Container _buildHeaderImage() {
+    return Container(
+      height: 280.0,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: AssetImage('images/temp.png'),
+        ),
       ),
     );
   }

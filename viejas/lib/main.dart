@@ -108,8 +108,8 @@ class _MyAppState extends State<MyApp> {
         selectedItemColor: Colors.red,
         unselectedItemColor: Colors.white,
         showUnselectedLabels: true,
-        selectedFontSize: 10,
-        unselectedFontSize: 10,
+        selectedFontSize: 11,
+        unselectedFontSize: 11,
         onTap: (index) {
           print(index);
           setState(() {
