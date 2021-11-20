@@ -12,7 +12,67 @@ class _PromotionsState extends State<Promotions> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: Text('Promotions'),
+        child: ListView.builder(
+            itemCount: 20,
+            itemBuilder: (contex, index) {
+              if (index == 0) {
+                return Container(
+                  height: 280.0,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: AssetImage('images/temp.png'),
+                    ),
+                  ),
+                );
+              } else {
+                return _buildPromotionCell();
+              }
+            }),
+      ),
+    );
+  }
+
+  Container _buildPromotionCell() {
+    return Container(
+      margin: EdgeInsets.fromLTRB(15, 15, 15, 0),
+      child: Row(
+        children: [
+          Container(
+            width: 70.0,
+            height: 70.0,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: AssetImage('images/temp.png'),
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(35.0)),
+            ),
+          ),
+          SizedBox(
+            width: 15,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'PROMOTIONS',
+                style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+              ),
+              TextButton(
+                onPressed: () {},
+                child: Text(
+                  'Get details of all promotions',
+                  textAlign: TextAlign.end,
+                  style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.white70),
+                ),
+              )
+            ],
+          )
+        ],
       ),
     );
   }
