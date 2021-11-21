@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:viejas/screens/CommonDetail.dart';
-import 'package:viejas/screens/WebViewScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -32,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ]);
   }
 
+  // ignore: unused_element
   Row _buildLoginView() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

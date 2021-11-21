@@ -136,24 +136,37 @@ class Sidemenu extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              ListTile(
-                onTap: () {},
-                leading: ImageIcon(
-                  AssetImage("images/Home.png"),
-                  color: Colors.grey,
-                  size: 30,
-                ),
-                title: Text(
-                  'Home',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25),
-                ),
-              )
+              _buildSideMenuRow('Home.png', 'Home'),
+              _buildSideMenuRow('Offers.png', 'Offers'),
+              _buildSideMenuRow('Promotions.png', 'Promotions'),
+              _buildSideMenuRow('Gaming.png', 'Gaming'),
+              _buildSideMenuRow('Hotel.png', 'Hotel'),
+              _buildSideMenuRow('Dining.png', 'Dining'),
+              _buildSideMenuRow('Music.png', 'Music and Lounges'),
+              _buildSideMenuRow('Cart.png', 'Viejas Outlet Centre'),
+              _buildSideMenuRow('Contactus.png', 'Contact us'),
+              _buildSideMenuRow('Map.png', 'Map'),
+              _buildSideMenuRow('Settings.png', 'Settings'),
+              _buildSideMenuRow('Login.png', 'Login'),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  ListTile _buildSideMenuRow(String imageName, String title) {
+    return ListTile(
+      onTap: () {},
+      leading: ImageIcon(
+        AssetImage("images/$imageName"),
+        color: Colors.grey,
+        size: 35,
+      ),
+      title: Text(
+        title,
+        style: TextStyle(
+            color: Colors.white70, fontWeight: FontWeight.normal, fontSize: 20),
       ),
     );
   }
