@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:viejas/screens/LoginScreen.dart';
+import 'package:viejas/screens/MapScreen.dart';
 import 'package:viejas/screens/Settings.dart';
 
 class Sidemenu extends StatefulWidget {
@@ -47,7 +49,13 @@ class _SidemenuState extends State<Sidemenu> {
               _buildSideMenuRow('Music.png', 'Music and Lounges'),
               _buildSideMenuRow('Cart.png', 'Viejas Outlet Centre'),
               _buildSideMenuRow('Contactus.png', 'Contact us'),
-              _buildSideMenuRow('Map.png', 'Map'),
+              _buildSideMenuRow('Map.png', 'Map', onTap: () {
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MapScreen()),
+                );
+              }),
               _buildSideMenuRow('Settings.png', 'Settings', onTap: () {
                 Navigator.of(context).pop();
                 Navigator.push(
@@ -55,7 +63,13 @@ class _SidemenuState extends State<Sidemenu> {
                   MaterialPageRoute(builder: (context) => Settings()),
                 );
               }),
-              _buildSideMenuRow('Login.png', 'Login'),
+              _buildSideMenuRow('Login.png', 'Login', onTap: () {
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
+              }),
             ],
           ),
         ),

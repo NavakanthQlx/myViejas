@@ -112,7 +112,6 @@ class _MyAppState extends State<MyApp> {
         selectedFontSize: 11,
         unselectedFontSize: 11,
         onTap: (index) {
-          print(index);
           setState(() {
             _selectedIndex = index;
           });
