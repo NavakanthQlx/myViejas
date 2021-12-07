@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:viejas/model/user.dart';
 import 'package:viejas/screens/CommonDetail.dart';
+import 'package:viejas/constants/constants.dart';
+import 'package:viejas/helpers/utils.dart';
+import 'dart:convert' as convert;
+import 'package:http/http.dart' as http;
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:connectivity/connectivity.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -9,6 +16,42 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Future<dynamic> getDataFromAPI() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
+      print('connected');
+    } else if (connectivityResult == ConnectivityResult.none) {
+      Utils.showToast('Please check your Internet Connection');
+      return [];
+    }
+    String url = Constants.interviewurl;
+    var response = await http.get(Uri.parse(url));
+    var json = convert.jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      var usersListArray = UsersList.fromJson(json);
+      return usersListArray.users;
+    } else {
+      var error = json['error'];
+      return error;
+    }
+  }
+
+  Center _showErrorMessage(String errorMessage) {
+    return Center(
+      child: Text(errorMessage),
+    );
+  }
+
+  Center _buildLoader() {
+    return Center(
+      child: SpinKitCircle(
+        color: Colors.red,
+        size: 50.0,
+      ),
+    );
+  }
+
   Widget _buildHeaderImage() {
     return Stack(alignment: Alignment.bottomCenter, children: [
       Container(
@@ -103,56 +146,82 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             _buildHeaderImage(),
             Expanded(
-              child: GridView.builder(
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 250,
-                    childAspectRatio: 3 / 3.7,
-                    crossAxisSpacing: 2,
-                    mainAxisSpacing: 2),
-                itemCount: 10,
-                itemBuilder: (BuildContext ctx, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CommonDetailScreen()),
-                      );
-                    },
-                    child: Center(
-                      child: Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: AssetImage('images/temp2.png'),
-                                  fit: BoxFit.fill),
-                            ),
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.all(10),
-                            height: 40,
-                            width: MediaQuery.of(context).size.width,
-                            color: Colors.black54,
-                            child: Text(
-                              'PROMOTIONS',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
+              child: _buildFuture(),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  FutureBuilder<dynamic> _buildFuture() {
+    return FutureBuilder<dynamic>(
+      future: getDataFromAPI(),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data is List<User>?) {
+            List<User>? usersArray = snapshot.data;
+            if (usersArray!.length > 0) {
+              return _buildGridView(context, usersArray);
+            } else {
+              return _showErrorMessage('Empty users');
+            }
+          } else {
+            return _showErrorMessage(snapshot.data.toString());
+          }
+        } else if (snapshot.hasError) {
+          return _showErrorMessage(snapshot.error.toString());
+        } else {
+          return _buildLoader();
+        }
+      },
+    );
+  }
+
+  GridView _buildGridView(BuildContext context, List<User> users) {
+    return GridView.builder(
+      shrinkWrap: true,
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 250,
+          childAspectRatio: 3 / 3.7,
+          crossAxisSpacing: 2,
+          mainAxisSpacing: 2),
+      itemCount: users.length,
+      itemBuilder: (BuildContext ctx, index) {
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CommonDetailScreen()),
+            );
+          },
+          child: Center(
+            child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('images/temp2.png'),
+                        fit: BoxFit.fill),
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.all(10),
+                  height: 40,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.black54,
+                  child: Text(
+                    users[index].title,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
