@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:viejas/model/home.dart';
 import 'package:viejas/model/user.dart';
 import 'package:viejas/screens/CommonDetail.dart';
 import 'package:viejas/constants/constants.dart';
@@ -16,6 +18,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  CasinoList? casinoListObj;
+
   Future<dynamic> getDataFromAPI() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile ||
@@ -25,16 +29,122 @@ class _HomeScreenState extends State<HomeScreen> {
       Utils.showToast('Please check your Internet Connection');
       return [];
     }
-    String url = Constants.interviewurl;
+    String url = Constants.loadCasino + "category_id=1&casino_id=30";
     var response = await http.get(Uri.parse(url));
     var json = convert.jsonDecode(response.body);
+    print('json -> $json');
     if (response.statusCode == 200) {
-      var usersListArray = UsersList.fromJson(json);
-      return usersListArray.users;
+      var usersListArray = Casino.fromJson(json.first);
+      setState(() {
+        casinoListObj = usersListArray.data.first;
+      });
+      return usersListArray.data.first.services;
     } else {
       var error = json['error'];
       return error;
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        child: Column(
+          children: [
+            _buildHeaderImage(),
+            Expanded(
+              child: _buildFuture(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  FutureBuilder<dynamic> _buildFuture() {
+    return FutureBuilder<dynamic>(
+      future: getDataFromAPI(),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data is List<Service>?) {
+            List<Service>? usersArray = snapshot.data;
+            if (usersArray!.length > 0) {
+              return _buildGridView(context, usersArray);
+            } else {
+              return _showErrorMessage('Empty users');
+            }
+          } else {
+            return _showErrorMessage(snapshot.data.toString());
+          }
+        } else if (snapshot.hasError) {
+          return _showErrorMessage(snapshot.error.toString());
+        } else {
+          return _buildLoader();
+        }
+      },
+    );
+  }
+
+  GridView _buildGridView(BuildContext context, List<Service> users) {
+    return GridView.builder(
+      shrinkWrap: true,
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 250,
+          childAspectRatio: 3 / 3.7,
+          crossAxisSpacing: 2,
+          mainAxisSpacing: 2),
+      itemCount: users.length,
+      itemBuilder: (BuildContext ctx, index) {
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CommonDetailScreen()),
+            );
+          },
+          child: Container(
+            child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                Container(
+                  height: double.infinity,
+                  child: CachedNetworkImage(
+                    fit: BoxFit.fill,
+                    placeholder: (context, url) => Center(
+                      child: Stack(alignment: Alignment.center, children: [
+                        Container(
+                          height: double.infinity,
+                          child: Image(
+                              fit: BoxFit.fill,
+                              image:
+                                  AssetImage('images/placeholderimage.jpeg')),
+                        ),
+                        Container(
+                            height: 20,
+                            width: 20,
+                            child: const CircularProgressIndicator()),
+                      ]),
+                    ),
+                    imageUrl: users[index].serviceIcon,
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.all(10),
+                  height: 40,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.black54,
+                  child: Text(
+                    users[index].serviceName,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Center _showErrorMessage(String errorMessage) {
@@ -59,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
         decoration: BoxDecoration(
           image: DecorationImage(
             fit: BoxFit.cover,
-            image: AssetImage('images/temp.png'),
+            image: NetworkImage(casinoListObj?.logo ?? ''),
           ),
         ),
       ),
@@ -135,93 +245,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        child: Column(
-          children: [
-            _buildHeaderImage(),
-            Expanded(
-              child: _buildFuture(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  FutureBuilder<dynamic> _buildFuture() {
-    return FutureBuilder<dynamic>(
-      future: getDataFromAPI(),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data is List<User>?) {
-            List<User>? usersArray = snapshot.data;
-            if (usersArray!.length > 0) {
-              return _buildGridView(context, usersArray);
-            } else {
-              return _showErrorMessage('Empty users');
-            }
-          } else {
-            return _showErrorMessage(snapshot.data.toString());
-          }
-        } else if (snapshot.hasError) {
-          return _showErrorMessage(snapshot.error.toString());
-        } else {
-          return _buildLoader();
-        }
-      },
-    );
-  }
-
-  GridView _buildGridView(BuildContext context, List<User> users) {
-    return GridView.builder(
-      shrinkWrap: true,
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 250,
-          childAspectRatio: 3 / 3.7,
-          crossAxisSpacing: 2,
-          mainAxisSpacing: 2),
-      itemCount: users.length,
-      itemBuilder: (BuildContext ctx, index) {
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CommonDetailScreen()),
-            );
-          },
-          child: Center(
-            child: Stack(
-              alignment: Alignment.bottomCenter,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('images/temp2.png'),
-                        fit: BoxFit.fill),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(10),
-                  height: 40,
-                  width: MediaQuery.of(context).size.width,
-                  color: Colors.black54,
-                  child: Text(
-                    users[index].title,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }
