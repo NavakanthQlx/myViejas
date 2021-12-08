@@ -1,5 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:viejas/model/promotions.dart';
 import 'package:viejas/screens/WebViewScreen.dart';
+import 'package:viejas/constants/constants.dart';
+import 'package:viejas/helpers/utils.dart';
+import 'dart:convert' as convert;
+import 'package:http/http.dart' as http;
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:connectivity/connectivity.dart';
 
 class Promotions extends StatefulWidget {
   const Promotions({Key? key}) : super(key: key);
@@ -9,20 +17,71 @@ class Promotions extends StatefulWidget {
 }
 
 class _PromotionsState extends State<Promotions> {
+  Future<dynamic> getDataFromAPI() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
+      print('connected');
+    } else if (connectivityResult == ConnectivityResult.none) {
+      Utils.showToast('Please check your Internet Connection');
+      return [];
+    }
+    String url = Constants.loadpromotionlist + "player_id=1056471&casino_id=30";
+    var response = await http.get(Uri.parse(url));
+    var json = convert.jsonDecode(response.body);
+    print('url -> $url');
+    print('json -> $json');
+    if (response.statusCode == 200) {
+      var usersListArray = PromotionsHead.fromJson(json);
+      return usersListArray.users;
+    } else {
+      var error = json['error'];
+      return error;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: ListView.builder(
-            itemCount: 20,
-            itemBuilder: (contex, index) {
-              if (index == 0) {
-                return _buildHeaderImage();
-              } else {
-                return _buildPromotionCell();
-              }
-            }),
-      ),
+      body: Container(child: _buildFuture()),
+    );
+  }
+
+  FutureBuilder<dynamic> _buildFuture() {
+    return FutureBuilder<dynamic>(
+      future: getDataFromAPI(),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data is List<PromotionsList>?) {
+            List<PromotionsList>? usersArray = snapshot.data;
+            if (usersArray!.length > 0) {
+              return _buildGridView(context, usersArray);
+            } else {
+              return _showErrorMessage('Empty users');
+            }
+          } else {
+            return _showErrorMessage(snapshot.data.toString());
+          }
+        } else if (snapshot.hasError) {
+          return _showErrorMessage(snapshot.error.toString());
+        } else {
+          return _buildLoader();
+        }
+      },
+    );
+  }
+
+  ListView _buildGridView(BuildContext context, List<PromotionsList> users) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: users.length + 1,
+      itemBuilder: (contex, index) {
+        if (index == 0) {
+          return _buildHeaderImage();
+        } else {
+          return _buildPromotionCell(context, users[index - 1]);
+        }
+      },
     );
   }
 
@@ -38,7 +97,8 @@ class _PromotionsState extends State<Promotions> {
     );
   }
 
-  Container _buildPromotionCell() {
+  Container _buildPromotionCell(
+      BuildContext context, PromotionsList promotionObj) {
     return Container(
       margin: EdgeInsets.fromLTRB(15, 15, 15, 0),
       child: Row(
@@ -46,43 +106,77 @@ class _PromotionsState extends State<Promotions> {
           Container(
             width: 70.0,
             height: 70.0,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage('images/temp.png'),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(35),
+              child: CachedNetworkImage(
+                fit: BoxFit.fill,
+                placeholder: (context, url) => Center(
+                  child: Stack(alignment: Alignment.center, children: [
+                    Container(
+                      height: double.infinity,
+                      child: Image(
+                          fit: BoxFit.fill,
+                          image: AssetImage('images/placeholderimage.jpeg')),
+                    ),
+                    Container(
+                        height: 20,
+                        width: 20,
+                        child: const CircularProgressIndicator()),
+                  ]),
+                ),
+                imageUrl: promotionObj.img,
               ),
-              borderRadius: BorderRadius.all(Radius.circular(35.0)),
             ),
           ),
           SizedBox(
             width: 15,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'PROMOTIONS',
-                style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => WebViewScreen()),
-                  );
-                },
-                child: Text(
-                  'Get details of all promotions',
-                  textAlign: TextAlign.end,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  promotionObj.promotitle,
                   style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.white70),
+                      overflow: TextOverflow.clip,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
                 ),
-              )
-            ],
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => WebViewScreen()),
+                    );
+                  },
+                  child: Text(
+                    'Get details of all promotions',
+                    textAlign: TextAlign.end,
+                    style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.white70),
+                  ),
+                )
+              ],
+            ),
           )
         ],
+      ),
+    );
+  }
+
+  Center _showErrorMessage(String errorMessage) {
+    return Center(
+      child: Text(errorMessage),
+    );
+  }
+
+  Center _buildLoader() {
+    return Center(
+      child: SpinKitCircle(
+        color: Colors.red,
+        size: 50.0,
       ),
     );
   }
