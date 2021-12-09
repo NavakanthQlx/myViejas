@@ -11,6 +11,9 @@ class _OffersState extends State<Offers> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Offers'),
+      ),
       body: Container(
         child: Container(
           width: 100.0,
