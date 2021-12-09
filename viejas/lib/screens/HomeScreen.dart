@@ -36,10 +36,10 @@ class _HomeScreenState extends State<HomeScreen> {
     print('json -> $json');
     if (response.statusCode == 200) {
       var usersListArray = Casino.fromJson(json.first);
-      setState(() {
-        casinoListObj = usersListArray.data.first;
-      });
-      return usersListArray.data.first.services;
+      // setState(() {
+      casinoListObj = usersListArray.data.first;
+      // });
+      return usersListArray.data;
     } else {
       var error = json['error'];
       return error;
@@ -52,10 +52,8 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Container(
         child: Column(
           children: [
-            _buildHeaderImage(),
-            Expanded(
-              child: _buildFuture(),
-            ),
+            // _buildHeaderImage(),
+            Expanded(child: _buildFuture()),
           ],
         ),
       ),
@@ -67,14 +65,22 @@ class _HomeScreenState extends State<HomeScreen> {
       future: getDataFromAPI(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data is List<Service>?) {
-            List<Service>? usersArray = snapshot.data;
+          if (snapshot.data is List<CasinoList>?) {
+            List<CasinoList>? usersArray = snapshot.data;
             if (usersArray!.length > 0) {
-              return _buildGridView(context, usersArray);
+              return Column(
+                children: [
+                  _buildHeaderImage(),
+                  Expanded(
+                      child:
+                          _buildGridView(context, usersArray.first.services)),
+                ],
+              );
             } else {
               return _showErrorMessage('Empty users');
             }
           } else {
+            print(snapshot.data);
             return _showErrorMessage(snapshot.data.toString());
           }
         } else if (snapshot.hasError) {
@@ -201,12 +207,29 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildHeaderImage() {
     return Stack(alignment: Alignment.bottomCenter, children: [
       Container(
+        alignment: Alignment.center,
         height: 230.0,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: NetworkImage(casinoListObj?.logo ?? ''),
+        width: double.infinity,
+        child: CachedNetworkImage(
+          height: double.infinity,
+          width: double.infinity,
+          fit: BoxFit.fill,
+          placeholder: (context, url) => Center(
+            child: Stack(alignment: Alignment.center, children: [
+              Container(
+                height: double.infinity,
+                width: double.infinity,
+                child: Image(
+                    fit: BoxFit.fill,
+                    image: AssetImage('images/placeholderimage.jpeg')),
+              ),
+              Container(
+                  height: 20,
+                  width: 20,
+                  child: const CircularProgressIndicator()),
+            ]),
           ),
+          imageUrl: casinoListObj?.logo ?? '',
         ),
       ),
       Container(

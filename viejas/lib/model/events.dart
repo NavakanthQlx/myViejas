@@ -2,7 +2,6 @@
 //
 //     final eventsList = eventsListFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 List<EventsList> eventsListFromJson(String str) =>
