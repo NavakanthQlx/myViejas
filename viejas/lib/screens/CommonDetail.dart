@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:viejas/model/dining.dart';
+import 'package:viejas/model/events.dart';
 import 'package:viejas/screens/WebViewScreen.dart';
 import 'package:viejas/constants/constants.dart';
 import 'package:viejas/helpers/utils.dart';
@@ -40,6 +41,29 @@ class _CommonDetailScreenState extends State<CommonDetailScreen> {
     }
   }
 
+  Future<dynamic> getEventDataFromAPI() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
+      print('connected');
+    } else if (connectivityResult == ConnectivityResult.none) {
+      Utils.showToast('Please check your Internet Connection');
+      return [];
+    }
+    String url = Constants.loaddinelist + "player_id=1056471&casino_id=30";
+    var response = await http.get(Uri.parse(url));
+    var json = convert.jsonDecode(response.body);
+    print('url -> $url');
+    print('json -> $json');
+    if (response.statusCode == 200) {
+      var usersListArray = EventHead.fromJson(json);
+      return usersListArray.users;
+    } else {
+      var error = json['error'];
+      return error;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +82,7 @@ class _CommonDetailScreenState extends State<CommonDetailScreen> {
           if (snapshot.data is List<DiningList>?) {
             List<DiningList>? usersArray = snapshot.data;
             if (usersArray!.length > 0) {
-              return _buildGridView(context, usersArray);
+              return _buildListView(context, usersArray);
             } else {
               return _showErrorMessage('Empty users');
             }
@@ -74,7 +98,7 @@ class _CommonDetailScreenState extends State<CommonDetailScreen> {
     );
   }
 
-  ListView _buildGridView(BuildContext context, List<DiningList> users) {
+  ListView _buildListView(BuildContext context, List<DiningList> users) {
     return ListView.builder(
       itemCount: users.length + 1,
       itemBuilder: (contex, index) {
