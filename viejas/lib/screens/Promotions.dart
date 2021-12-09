@@ -43,6 +43,9 @@ class _PromotionsState extends State<Promotions> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Promotions'),
+      ),
       body: Container(child: _buildFuture()),
     );
   }

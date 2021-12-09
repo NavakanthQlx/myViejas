@@ -8,6 +8,8 @@ import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:viejas/screens/EventScreen.dart';
+import 'package:viejas/screens/Promotions.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -96,10 +98,33 @@ class _HomeScreenState extends State<HomeScreen> {
       itemBuilder: (BuildContext ctx, index) {
         return GestureDetector(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CommonDetailScreen()),
-            );
+            String title = users[index].serviceName;
+            switch (title) {
+              case "Dining":
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CommonDetailScreen()),
+                );
+                break;
+              case "Hotel":
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => EventScreen()),
+                );
+                break;
+              case "Promotions":
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Promotions()),
+                );
+                break;
+              default:
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CommonDetailScreen()),
+                );
+                break;
+            }
           },
           child: Container(
             child: Stack(
