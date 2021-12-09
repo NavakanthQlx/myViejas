@@ -10,7 +10,9 @@ import 'package:connectivity/connectivity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class EventScreen extends StatefulWidget {
-  const EventScreen({Key? key}) : super(key: key);
+  final String bannerImageUrl;
+
+  const EventScreen({Key? key, required this.bannerImageUrl}) : super(key: key);
 
   @override
   _EventScreenState createState() => _EventScreenState();
@@ -88,13 +90,41 @@ class _EventScreenState extends State<EventScreen> {
   }
 
   Container _buildHeaderImage() {
+    if (widget.bannerImageUrl.isNotEmpty) {
+      return _buildHeaderImageFromNetwork();
+    } else {
+      return Container(
+        height: 280.0,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: AssetImage('images/temp.png'),
+          ),
+        ),
+      );
+    }
+  }
+
+  Container _buildHeaderImageFromNetwork() {
     return Container(
       height: 280.0,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: AssetImage('images/temp.png'),
+      child: CachedNetworkImage(
+        fit: BoxFit.fill,
+        placeholder: (context, url) => Center(
+          child: Stack(alignment: Alignment.center, children: [
+            Container(
+              height: double.infinity,
+              child: Image(
+                  fit: BoxFit.fill,
+                  image: AssetImage('images/placeholderimage.jpeg')),
+            ),
+            Container(
+                height: 20,
+                width: 20,
+                child: const CircularProgressIndicator()),
+          ]),
         ),
+        imageUrl: widget.bannerImageUrl,
       ),
     );
   }

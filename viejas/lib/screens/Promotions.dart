@@ -10,7 +10,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
 
 class Promotions extends StatefulWidget {
-  const Promotions({Key? key}) : super(key: key);
+  final String bannerImageUrl;
+
+  const Promotions({Key? key, required this.bannerImageUrl}) : super(key: key);
 
   @override
   _PromotionsState createState() => _PromotionsState();
@@ -89,13 +91,41 @@ class _PromotionsState extends State<Promotions> {
   }
 
   Container _buildHeaderImage() {
+    if (widget.bannerImageUrl.isNotEmpty) {
+      return _buildHeaderImageFromNetwork();
+    } else {
+      return Container(
+        height: 280.0,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: AssetImage('images/temp.png'),
+          ),
+        ),
+      );
+    }
+  }
+
+  Container _buildHeaderImageFromNetwork() {
     return Container(
       height: 280.0,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: AssetImage('images/temp.png'),
+      child: CachedNetworkImage(
+        fit: BoxFit.fill,
+        placeholder: (context, url) => Center(
+          child: Stack(alignment: Alignment.center, children: [
+            Container(
+              height: double.infinity,
+              child: Image(
+                  fit: BoxFit.fill,
+                  image: AssetImage('images/placeholderimage.jpeg')),
+            ),
+            Container(
+                height: 20,
+                width: 20,
+                child: const CircularProgressIndicator()),
+          ]),
         ),
+        imageUrl: widget.bannerImageUrl,
       ),
     );
   }

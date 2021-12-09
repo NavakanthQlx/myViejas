@@ -98,30 +98,42 @@ class _HomeScreenState extends State<HomeScreen> {
       itemBuilder: (BuildContext ctx, index) {
         return GestureDetector(
           onTap: () {
+            Service obj = users[index];
             String title = users[index].serviceName;
             switch (title) {
               case "Dining":
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CommonDetailScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => CommonDetailScreen(
+                            bannerImageUrl: obj.serviceIcon,
+                          )),
                 );
                 break;
               case "Hotel":
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => EventScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => EventScreen(
+                            bannerImageUrl: obj.serviceIcon,
+                          )),
                 );
                 break;
               case "Promotions":
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Promotions()),
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          Promotions(bannerImageUrl: obj.serviceIcon)),
                 );
                 break;
               default:
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => CommonDetailScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => CommonDetailScreen(
+                            bannerImageUrl: obj.serviceIcon,
+                          )),
                 );
                 break;
             }

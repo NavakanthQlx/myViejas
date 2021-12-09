@@ -24,7 +24,9 @@ class _MyAppState extends State<MyApp> {
   List<Widget> tabs = [
     HomeScreen(),
     MapScreen(),
-    Promotions(),
+    Promotions(
+      bannerImageUrl: "",
+    ),
     Offers(),
     Balance()
   ];
