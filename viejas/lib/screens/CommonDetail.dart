@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:viejas/helpers/widgets.dart';
 import 'package:viejas/model/dining.dart';
 import 'package:viejas/model/events.dart';
 import 'package:viejas/screens/WebViewScreen.dart';
@@ -70,9 +71,7 @@ class _CommonDetailScreenState extends State<CommonDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('VIEJAS'),
-      ),
+      appBar: myAppBar(),
       body: Container(child: _buildFuture()),
     );
   }

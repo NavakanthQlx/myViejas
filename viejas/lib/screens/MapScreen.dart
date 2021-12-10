@@ -1,8 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:viejas/helpers/widgets.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
+  final bool showAppBar;
+
+  const MapScreen({Key? key, required this.showAppBar}) : super(key: key);
 
   @override
   _MapScreenState createState() => _MapScreenState();
@@ -12,9 +15,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Map'),
-      ),
+      appBar: widget.showAppBar ? myAppBar() : null,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

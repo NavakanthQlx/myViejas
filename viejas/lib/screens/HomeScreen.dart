@@ -129,8 +129,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          Promotions(bannerImageUrl: obj.serviceIcon)),
+                      builder: (context) => Promotions(
+                            bannerImageUrl: obj.serviceIcon,
+                            showAppBar: true,
+                          )),
                 );
                 break;
               default:

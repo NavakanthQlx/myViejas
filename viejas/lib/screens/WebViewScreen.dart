@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:viejas/helpers/widgets.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewScreen extends StatefulWidget {
@@ -12,9 +13,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('promotions'),
-      ),
+      appBar: myAppBar(),
       body: WebView(
         initialUrl: "https://viejas.com/promotions/",
       ),

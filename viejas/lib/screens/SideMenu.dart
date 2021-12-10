@@ -71,7 +71,10 @@ class _SidemenuState extends State<Sidemenu> {
                     Navigator.of(context).pop();
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => MapScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => MapScreen(
+                                showAppBar: true,
+                              )),
                     );
                   }),
                   _buildSideMenuRow('Settings.png', 'Settings', onTap: () {
@@ -114,6 +117,7 @@ class _SidemenuState extends State<Sidemenu> {
       MaterialPageRoute(
         builder: (context) => Promotions(
           bannerImageUrl: '',
+          showAppBar: true,
         ),
       ),
     );
@@ -124,7 +128,9 @@ class _SidemenuState extends State<Sidemenu> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Offers(),
+        builder: (context) => Offers(
+          showAppBar: true,
+        ),
       ),
     );
   }

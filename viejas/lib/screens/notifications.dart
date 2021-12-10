@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:viejas/helpers/widgets.dart';
 
-class Offers extends StatefulWidget {
-  final bool showAppBar;
-
-  const Offers({Key? key, required this.showAppBar}) : super(key: key);
+class Notifications extends StatefulWidget {
+  const Notifications({Key? key}) : super(key: key);
 
   @override
-  _OffersState createState() => _OffersState();
+  _NotificationsState createState() => _NotificationsState();
 }
 
-class _OffersState extends State<Offers> {
+class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.showAppBar ? myAppBar() : null,
+      appBar: myAppBar(),
       body: Container(
         child: Container(
           width: 100.0,

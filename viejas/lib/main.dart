@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:viejas/constants/constants.dart';
+import 'package:viejas/helpers/widgets.dart';
 import 'package:viejas/screens/Balance.dart';
 import 'package:viejas/screens/HomeScreen.dart';
 import 'package:viejas/screens/MapScreen.dart';
 import 'package:viejas/screens/Offers.dart';
 import 'package:viejas/screens/Promotions.dart';
 import 'package:viejas/screens/SideMenu.dart';
+import 'package:viejas/screens/notifications.dart';
 
 void main() {
   runApp(MyApp());
@@ -23,11 +25,16 @@ class _MyAppState extends State<MyApp> {
 
   List<Widget> tabs = [
     HomeScreen(),
-    MapScreen(),
+    MapScreen(
+      showAppBar: false,
+    ),
     Promotions(
       bannerImageUrl: "",
+      showAppBar: false,
     ),
-    Offers(),
+    Offers(
+      showAppBar: false,
+    ),
     Balance()
   ];
 
@@ -52,9 +59,7 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('VIEJAS'),
-        ),
+        appBar: myAppBar(),
         drawer: Sidemenu(),
         bottomNavigationBar: tabbar(context),
         body: tabs[_selectedIndex],

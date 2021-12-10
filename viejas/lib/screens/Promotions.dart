@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:viejas/helpers/widgets.dart';
 import 'package:viejas/model/promotions.dart';
 import 'package:viejas/screens/WebViewScreen.dart';
 import 'package:viejas/constants/constants.dart';
@@ -11,8 +12,11 @@ import 'package:connectivity/connectivity.dart';
 
 class Promotions extends StatefulWidget {
   final String bannerImageUrl;
+  final bool showAppBar;
 
-  const Promotions({Key? key, required this.bannerImageUrl}) : super(key: key);
+  const Promotions(
+      {Key? key, required this.bannerImageUrl, required this.showAppBar})
+      : super(key: key);
 
   @override
   _PromotionsState createState() => _PromotionsState();
@@ -45,9 +49,7 @@ class _PromotionsState extends State<Promotions> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Promotions'),
-      ),
+      appBar: widget.showAppBar ? myAppBar() : null,
       body: Container(child: _buildFuture()),
     );
   }

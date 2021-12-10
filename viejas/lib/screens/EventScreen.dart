@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:viejas/helpers/widgets.dart';
 import 'package:viejas/model/events.dart';
 import 'package:viejas/screens/WebViewScreen.dart';
 import 'package:viejas/constants/constants.dart';
@@ -45,9 +46,7 @@ class _EventScreenState extends State<EventScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('VIEJAS'),
-      ),
+      appBar: myAppBar(),
       body: Container(child: _buildFuture()),
     );
   }
