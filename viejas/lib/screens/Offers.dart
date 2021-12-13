@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:viejas/helpers/widgets.dart';
+import 'package:viejas/screens/SideMenu.dart';
 
 class Offers extends StatefulWidget {
   final bool showAppBar;
@@ -14,6 +15,7 @@ class _OffersState extends State<Offers> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Sidemenu(),
       appBar: widget.showAppBar ? myAppBar() : null,
       body: Container(
         child: Container(

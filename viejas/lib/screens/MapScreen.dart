@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:viejas/helpers/widgets.dart';
+import 'package:viejas/screens/SideMenu.dart';
 
 class MapScreen extends StatefulWidget {
   final bool showAppBar;
@@ -15,6 +16,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Sidemenu(),
       appBar: widget.showAppBar ? myAppBar() : null,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,

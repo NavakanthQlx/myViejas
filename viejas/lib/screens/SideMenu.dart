@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:viejas/screens/CommonDetail.dart';
 import 'package:viejas/screens/EventScreen.dart';
-import 'package:viejas/screens/HomeScreen.dart';
 import 'package:viejas/screens/LoginScreen.dart';
-import 'package:viejas/screens/MapScreen.dart';
-import 'package:viejas/screens/Offers.dart';
-import 'package:viejas/screens/Promotions.dart';
 import 'package:viejas/screens/Settings.dart';
+import 'package:viejas/screens/tabspage.dart';
 
 class Sidemenu extends StatefulWidget {
   const Sidemenu({Key? key}) : super(key: key);
@@ -68,13 +65,11 @@ class _SidemenuState extends State<Sidemenu> {
                   _buildSideMenuRow('Cart.png', 'Viejas Outlet Centre'),
                   _buildSideMenuRow('Contactus.png', 'Contact us'),
                   _buildSideMenuRow('Map.png', 'Map', onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.push(
+                    // Navigator.of(context).pop();
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => MapScreen(
-                                showAppBar: true,
-                              )),
+                          builder: (context) => TabsPage(selectedIndex: 1)),
                     );
                   }),
                   _buildSideMenuRow('Settings.png', 'Settings', onTap: () {
@@ -101,37 +96,30 @@ class _SidemenuState extends State<Sidemenu> {
   }
 
   void moveToHomePage() {
-    Navigator.of(context).pop();
-    // Navigator.pushReplacement(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => HomeScreen(),
-    //   ),
-    // );
+    // Navigator.of(context).pop();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TabsPage(selectedIndex: 0),
+      ),
+    );
   }
 
   void moveToPromotionsPage() {
-    Navigator.of(context).pop();
+    // Navigator.of(context).pop();
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Promotions(
-          bannerImageUrl: '',
-          showAppBar: true,
-        ),
+        builder: (context) => TabsPage(selectedIndex: 2),
       ),
     );
   }
 
   void moveToOffersPage() {
-    Navigator.of(context).pop();
+    // Navigator.of(context).pop();
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => Offers(
-          showAppBar: true,
-        ),
-      ),
+      MaterialPageRoute(builder: (context) => TabsPage(selectedIndex: 3)),
     );
   }
 

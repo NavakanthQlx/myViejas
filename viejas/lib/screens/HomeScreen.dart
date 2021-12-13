@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:viejas/helpers/widgets.dart';
 import 'package:viejas/model/home.dart';
 import 'package:viejas/screens/CommonDetail.dart';
 import 'package:viejas/constants/constants.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:viejas/screens/EventScreen.dart';
 import 'package:viejas/screens/Promotions.dart';
+import 'package:viejas/screens/SideMenu.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -49,6 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Sidemenu(),
+      appBar: myAppBar(),
       body: Container(
         child: Column(
           children: [
@@ -131,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   MaterialPageRoute(
                       builder: (context) => Promotions(
                             bannerImageUrl: obj.serviceIcon,
-                            showAppBar: true,
+                            showAppBar: false,
                           )),
                 );
                 break;

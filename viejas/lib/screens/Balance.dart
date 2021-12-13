@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:viejas/helpers/widgets.dart';
+import 'package:viejas/screens/SideMenu.dart';
 
 class Balance extends StatefulWidget {
   const Balance({Key? key}) : super(key: key);
@@ -11,6 +13,8 @@ class _BalanceState extends State<Balance> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Sidemenu(),
+      appBar: myAppBar(),
       backgroundColor: Color.fromRGBO(40, 48, 51, 1),
       body: Container(
         child: Column(

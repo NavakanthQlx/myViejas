@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:viejas/helpers/widgets.dart';
 import 'package:viejas/model/promotions.dart';
+import 'package:viejas/screens/SideMenu.dart';
 import 'package:viejas/screens/WebViewScreen.dart';
 import 'package:viejas/constants/constants.dart';
 import 'package:viejas/helpers/utils.dart';
@@ -49,7 +50,8 @@ class _PromotionsState extends State<Promotions> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.showAppBar ? myAppBar() : null,
+      drawer: widget.showAppBar ? Sidemenu() : null,
+      appBar: myAppBar(),
       body: Container(child: _buildFuture()),
     );
   }
