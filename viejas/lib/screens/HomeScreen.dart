@@ -9,7 +9,9 @@ import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:viejas/screens/EventScreen.dart';
+import 'package:viejas/screens/Dining/DiningScreen.dart';
+import 'package:viejas/screens/Gaming/GamingScreen.dart';
+import 'package:viejas/screens/Hotel/HotelScreen.dart';
 import 'package:viejas/screens/Promotions.dart';
 import 'package:viejas/screens/SideMenu.dart';
 
@@ -109,27 +111,36 @@ class _HomeScreenState extends State<HomeScreen> {
         return GestureDetector(
           onTap: () {
             Service obj = users[index];
-            String title = users[index].serviceName;
+            String title = users[index].serviceName.toUpperCase();
             switch (title) {
-              case "Dining":
+              case "GAMING":
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => CommonDetailScreen(
+                      builder: (context) => GamingScreen(
                             bannerImageUrl: obj.serviceIcon,
                           )),
                 );
                 break;
-              case "Hotel":
+              case "DINING":
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => EventScreen(
+                      builder: (context) => DiningScreen(
                             bannerImageUrl: obj.serviceIcon,
                           )),
                 );
                 break;
-              case "Promotions":
+              case "HOTEL":
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HotelScreen(
+                            bannerImageUrl: obj.serviceIcon,
+                          )),
+                );
+                break;
+              case "PROMOTIONS":
                 Navigator.push(
                   context,
                   MaterialPageRoute(

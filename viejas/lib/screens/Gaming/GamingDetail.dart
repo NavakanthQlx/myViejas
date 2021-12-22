@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:viejas/helpers/widgets.dart';
-import 'package:viejas/model/dining.dart';
 import 'package:viejas/model/events.dart';
-import 'package:viejas/screens/WebViewScreen.dart';
 import 'package:viejas/constants/constants.dart';
 import 'package:viejas/helpers/utils.dart';
 import 'dart:convert' as convert;
@@ -10,18 +8,19 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:viejas/screens/WebViewScreen.dart';
 
-class CommonDetailScreen extends StatefulWidget {
+class GamingDetail extends StatefulWidget {
   final String bannerImageUrl;
 
-  const CommonDetailScreen({Key? key, required this.bannerImageUrl})
+  const GamingDetail({Key? key, required this.bannerImageUrl})
       : super(key: key);
 
   @override
-  _CommonDetailScreenState createState() => _CommonDetailScreenState();
+  _GamingDetailState createState() => _GamingDetailState();
 }
 
-class _CommonDetailScreenState extends State<CommonDetailScreen> {
+class _GamingDetailState extends State<GamingDetail> {
   Future<dynamic> getDataFromAPI() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile ||
@@ -31,30 +30,7 @@ class _CommonDetailScreenState extends State<CommonDetailScreen> {
       Utils.showToast('Please check your Internet Connection');
       return [];
     }
-    String url = Constants.loaddinelist + "player_id=1056471&casino_id=30";
-    var response = await http.get(Uri.parse(url));
-    var json = convert.jsonDecode(response.body);
-    print('url -> $url');
-    print('json -> $json');
-    if (response.statusCode == 200) {
-      var usersListArray = DiningHead.fromJson(json);
-      return usersListArray.users;
-    } else {
-      var error = json['error'];
-      return error;
-    }
-  }
-
-  Future<dynamic> getEventDataFromAPI() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.mobile ||
-        connectivityResult == ConnectivityResult.wifi) {
-      print('connected');
-    } else if (connectivityResult == ConnectivityResult.none) {
-      Utils.showToast('Please check your Internet Connection');
-      return [];
-    }
-    String url = Constants.loaddinelist + "player_id=1056471&casino_id=30";
+    String url = Constants.loadeventlist + "player_id=1056471&casino_id=30";
     var response = await http.get(Uri.parse(url));
     var json = convert.jsonDecode(response.body);
     print('url -> $url');
@@ -81,8 +57,8 @@ class _CommonDetailScreenState extends State<CommonDetailScreen> {
       future: getDataFromAPI(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data is List<DiningList>?) {
-            List<DiningList>? usersArray = snapshot.data;
+          if (snapshot.data is List<EventsList>?) {
+            List<EventsList>? usersArray = snapshot.data;
             if (usersArray!.length > 0) {
               return _buildListView(context, usersArray);
             } else {
@@ -100,12 +76,15 @@ class _CommonDetailScreenState extends State<CommonDetailScreen> {
     );
   }
 
-  ListView _buildListView(BuildContext context, List<DiningList> users) {
+  ListView _buildListView(BuildContext context, List<EventsList> users) {
     return ListView.builder(
       itemCount: users.length + 1,
+      shrinkWrap: true,
       itemBuilder: (contex, index) {
         if (index == 0) {
           return _buildHeaderImage();
+        } else if (index == 1) {
+          return _buildNewSlots();
         } else {
           return _buildDiningCell(context, users[index - 1]);
         }
@@ -168,7 +147,7 @@ class _CommonDetailScreenState extends State<CommonDetailScreen> {
     );
   }
 
-  Widget _buildDiningCell(BuildContext context, DiningList diningObj) {
+  Widget _buildDiningCell(BuildContext context, EventsList obj) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -176,66 +155,107 @@ class _CommonDetailScreenState extends State<CommonDetailScreen> {
           MaterialPageRoute(builder: (context) => WebViewScreen()),
         );
       },
-      child: Container(
-        margin: EdgeInsets.fromLTRB(15, 15, 15, 15),
-        alignment: Alignment.topLeft,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 70.0,
-              height: 70.0,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(35),
-                child: CachedNetworkImage(
-                  fit: BoxFit.fill,
-                  placeholder: (context, url) => Center(
-                    child: Stack(alignment: Alignment.center, children: [
-                      Container(
-                        height: double.infinity,
-                        child: Image(
-                            fit: BoxFit.fill,
-                            image: AssetImage('images/placeholderimage.jpeg')),
-                      ),
-                      Container(
-                          height: 20,
-                          width: 20,
-                          child: const CircularProgressIndicator()),
-                    ]),
+      child: _buildBottomCell(obj),
+    );
+  }
+
+  Container _buildNewSlots() {
+    return Container(
+      margin: EdgeInsets.fromLTRB(25, 15, 15, 15),
+      height: 100,
+      child: Column(
+        children: [
+          Text(
+            'THE NEW SLOTS',
+            style: TextStyle(
+                overflow: TextOverflow.visible,
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
+          ),
+          SizedBox(
+            height: 3,
+          ),
+          Container(height: 3, width: 150, color: Colors.red),
+          SizedBox(
+            height: 15,
+          ),
+          Text(
+            'Enjoy the excitement of the best in San Diego casino action with the addition of 1,000 amzing all new slots!',
+            style: TextStyle(
+                overflow: TextOverflow.visible,
+                fontSize: 15,
+                color: Colors.white),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container _buildBottomCell(EventsList obj) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(15, 15, 15, 15),
+      // height: 600,
+      width: double.infinity,
+      color: Colors.black,
+      alignment: Alignment.center,
+      child: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            height: 300.0,
+            child: CachedNetworkImage(
+              fit: BoxFit.fill,
+              placeholder: (context, url) => Center(
+                child: Stack(alignment: Alignment.center, children: [
+                  Container(
+                    height: 300,
+                    child: Image(
+                        fit: BoxFit.fill,
+                        image: AssetImage('images/placeholderimage.jpeg')),
                   ),
-                  imageUrl: diningObj.img,
+                  Container(
+                      height: 20,
+                      width: 20,
+                      child: const CircularProgressIndicator()),
+                ]),
+              ),
+              imageUrl: obj.img,
+            ),
+          ),
+          SizedBox(
+            width: 15,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  obj.eventname,
+                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
                 ),
-              ),
+                SizedBox(
+                  height: 3,
+                ),
+                Container(height: 3, width: 150, color: Colors.red),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  obj.description,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                      overflow: TextOverflow.visible,
+                      fontSize: 17,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.white70),
+                )
+              ],
             ),
-            SizedBox(
-              width: 15,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    diningObj.diningtitle,
-                    style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    diningObj.description,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        overflow: TextOverflow.visible,
-                        fontSize: 17,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.white70),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
