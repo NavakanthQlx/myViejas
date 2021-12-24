@@ -34,6 +34,7 @@ dependencies:
   http: ^0.13.3
   connectivity:
   cached_network_image: ^3.2.0
+  onesignal_flutter: ^3.0.0
 
 dev_dependencies:
   flutter_test:

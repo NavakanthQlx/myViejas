@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:viejas/screens/bottom_tabs.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 // ignore: must_be_immutable
 class TabsPage extends StatefulWidget {
@@ -22,10 +23,23 @@ class _TabsPageState extends State<TabsPage> {
     });
   }
 
+  setupOneSignal() {
+    //Remove this method to stop OneSignal Debugging
+    OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+
+    OneSignal.shared.setAppId("9a2fd449-7193-489a-a00d-689417ff0877");
+
+// The promptForPushNotificationsWithUserResponse function will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+    OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
+      print("Accepted permission: $accepted");
+    });
+  }
+
   @override
   void initState() {
     _onItemTapped(widget.selectedIndex);
     super.initState();
+    setupOneSignal();
   }
 
   @override
