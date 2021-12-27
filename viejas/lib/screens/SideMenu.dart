@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:viejas/screens/CommonDetail.dart';
-import 'package:viejas/screens/EventScreen.dart';
+import 'package:viejas/screens/Dining/DiningScreen.dart';
+import 'package:viejas/screens/Gaming/GamingScreen.dart';
+import 'package:viejas/screens/Hotel/HotelScreen.dart';
 import 'package:viejas/screens/LoginScreen.dart';
 import 'package:viejas/screens/Settings.dart';
 import 'package:viejas/screens/tabspage.dart';
@@ -53,16 +55,22 @@ class _SidemenuState extends State<Sidemenu> {
                     moveToPromotionsPage();
                   }),
                   _buildSideMenuRow('Gaming.png', 'Gaming', onTap: () {
-                    moveToCommonDetailPage();
+                    moveToGamingPage();
                   }),
                   _buildSideMenuRow('Hotel.png', 'Hotel', onTap: () {
-                    moveToEventPage();
+                    moveToHotelPage();
                   }),
                   _buildSideMenuRow('Dining.png', 'Dining', onTap: () {
+                    moveToDiningPage();
+                  }),
+                  _buildSideMenuRow('Music.png', 'Music and Lounges',
+                      onTap: () {
                     moveToCommonDetailPage();
                   }),
-                  _buildSideMenuRow('Music.png', 'Music and Lounges'),
-                  _buildSideMenuRow('Cart.png', 'Viejas Outlet Centre'),
+                  _buildSideMenuRow('Cart.png', 'Viejas Outlet Centre',
+                      onTap: () {
+                    moveToCommonDetailPage();
+                  }),
                   _buildSideMenuRow('Contactus.png', 'Contact us'),
                   _buildSideMenuRow('Map.png', 'Map', onTap: () {
                     // Navigator.of(context).pop();
@@ -135,12 +143,36 @@ class _SidemenuState extends State<Sidemenu> {
     );
   }
 
-  void moveToEventPage() {
+  void moveToGamingPage() {
     Navigator.of(context).pop();
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => EventScreen(
+        builder: (context) => GamingScreen(
+          bannerImageUrl: '',
+        ),
+      ),
+    );
+  }
+
+  void moveToHotelPage() {
+    Navigator.of(context).pop();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HotelScreen(
+          bannerImageUrl: '',
+        ),
+      ),
+    );
+  }
+
+  void moveToDiningPage() {
+    Navigator.of(context).pop();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DiningScreen(
           bannerImageUrl: '',
         ),
       ),

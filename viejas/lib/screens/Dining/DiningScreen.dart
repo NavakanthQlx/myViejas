@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:viejas/helpers/widgets.dart';
 import 'package:viejas/model/events.dart';
-import 'package:viejas/screens/WebViewScreen.dart';
 import 'package:viejas/constants/constants.dart';
 import 'package:viejas/helpers/utils.dart';
 import 'dart:convert' as convert;
@@ -9,17 +8,19 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:viejas/screens/Dining/DiningDetail.dart';
 
-class EventScreen extends StatefulWidget {
+class DiningScreen extends StatefulWidget {
   final String bannerImageUrl;
 
-  const EventScreen({Key? key, required this.bannerImageUrl}) : super(key: key);
+  const DiningScreen({Key? key, required this.bannerImageUrl})
+      : super(key: key);
 
   @override
-  _EventScreenState createState() => _EventScreenState();
+  _DiningScreenState createState() => _DiningScreenState();
 }
 
-class _EventScreenState extends State<EventScreen> {
+class _DiningScreenState extends State<DiningScreen> {
   Future<dynamic> getDataFromAPI() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile ||
@@ -148,7 +149,9 @@ class _EventScreenState extends State<EventScreen> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => WebViewScreen()),
+          MaterialPageRoute(
+              builder: (context) =>
+                  DiningDetail(bannerImageUrl: widget.bannerImageUrl)),
         );
       },
       child: Container(
@@ -192,7 +195,7 @@ class _EventScreenState extends State<EventScreen> {
                 children: [
                   Text(
                     obj.eventname,
-                    style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
                     height: 10,
