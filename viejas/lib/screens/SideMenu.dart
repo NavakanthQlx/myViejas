@@ -71,7 +71,9 @@ class _SidemenuState extends State<Sidemenu> {
                       onTap: () {
                     moveToCommonDetailPage();
                   }),
-                  _buildSideMenuRow('Contactus.png', 'Contact us'),
+                  _buildSideMenuRow('Contactus.png', 'Contact us', onTap: () {
+                    moveToCommonDetailPage();
+                  }),
                   _buildSideMenuRow('Map.png', 'Map', onTap: () {
                     // Navigator.of(context).pop();
                     Navigator.pushReplacement(
