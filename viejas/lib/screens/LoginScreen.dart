@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     String urlStr = Constants.loginurl;
     var params = {
-      'playerclubid': _playerId.text,
+      'username': _playerId.text,
     };
     var url = Uri.parse(urlStr);
     var response = await http.post(

@@ -78,7 +78,7 @@ class _SignupState extends State<Signup> {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
-        firstDate: DateTime(1990, 8),
+        firstDate: DateTime(1940, 8),
         lastDate: DateTime.now());
     if (picked != null)
       setState(() {
