@@ -24,6 +24,56 @@ class _SignupState extends State<Signup> {
   DateTime? _chosenDateTime;
   bool isLoading = false;
 
+  Future hitSignupAPI() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
+      print('connected');
+    } else if (connectivityResult == ConnectivityResult.none) {
+      Utils.showToast('Please check your Internet Connection');
+      return;
+    }
+    setState(() {
+      isLoading = true;
+    });
+    String urlStr = Constants.signupurl;
+    var params = {
+      'playerclubid': _playerId.text,
+      'dob': DateFormat('yyyy-MM-dd').format(_chosenDateTime ?? DateTime.now()),
+      'zipcode': _zipcode.text,
+      'emailaddress': _email.text
+    };
+    var url = Uri.parse(urlStr);
+    var response = await http.post(
+      url,
+      body: convert.jsonEncode(params),
+    );
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+    List resp = convert.jsonDecode(response.body);
+    String alertMsg = "Something went wrong";
+    String statusMsg = "Success";
+    if (resp.length > 0) {
+      alertMsg = resp[0]['message'];
+      statusMsg = resp[0]['Status'];
+    }
+    setState(() {
+      isLoading = false;
+    });
+    if (response.statusCode == 200) {
+      if (statusMsg == "Success") {
+        Utils.showAndroidDialog(context, title: statusMsg, message: alertMsg,
+            okCallback: () {
+          Navigator.pop(context);
+        });
+      } else {
+        Utils.showAndroidDialog(context, title: statusMsg, message: alertMsg);
+      }
+    } else {
+      Utils.showAndroidDialog(context, title: statusMsg, message: alertMsg);
+    }
+  }
+
   Future<void> _showAndroidStyleDatePicker(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
@@ -106,56 +156,6 @@ class _SignupState extends State<Signup> {
     }
 
     hitSignupAPI();
-  }
-
-  Future hitSignupAPI() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.mobile ||
-        connectivityResult == ConnectivityResult.wifi) {
-      print('connected');
-    } else if (connectivityResult == ConnectivityResult.none) {
-      Utils.showToast('Please check your Internet Connection');
-      return;
-    }
-    setState(() {
-      isLoading = true;
-    });
-    String urlStr = Constants.signupurl;
-    var params = {
-      'playerclubid': _playerId.text,
-      'dob': DateFormat('yyyy-MM-dd').format(_chosenDateTime ?? DateTime.now()),
-      'zipcode': _zipcode.text,
-      'emailaddress': _email.text
-    };
-    var url = Uri.parse(urlStr);
-    var response = await http.post(
-      url,
-      body: convert.jsonEncode(params),
-    );
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
-    List resp = convert.jsonDecode(response.body);
-    String alertMsg = "Something went wrong";
-    String statusMsg = "Success";
-    if (resp.length > 0) {
-      alertMsg = resp[0]['message'];
-      statusMsg = resp[0]['Status'];
-    }
-    setState(() {
-      isLoading = false;
-    });
-    if (response.statusCode == 200) {
-      if (statusMsg == "Success") {
-        Utils.showAndroidDialog(context, title: statusMsg, message: alertMsg,
-            okCallback: () {
-          Navigator.pop(context);
-        });
-      } else {
-        Utils.showAndroidDialog(context, title: statusMsg, message: alertMsg);
-      }
-    } else {
-      Utils.showAndroidDialog(context, title: statusMsg, message: alertMsg);
-    }
   }
 
   @override

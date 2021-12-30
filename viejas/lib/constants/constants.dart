@@ -7,6 +7,7 @@ class Constants {
   static const loadpromotionlist = Constants.baseurl + "loadpromotionlist.php?";
   static const loaddinelist = Constants.baseurl + "loaddinelist.php?";
   static const loadeventlist = Constants.baseurl + "loadeventlist.php?";
+  static const loginurl = Constants.baseurl + "mobile_logincheck.php?";
   static const signupurl =
       "https://qlx.com/viejas/php/webservices/register.php";
 
