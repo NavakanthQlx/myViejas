@@ -7,6 +7,9 @@ class Constants {
   static const loadpromotionlist = Constants.baseurl + "loadpromotionlist.php?";
   static const loaddinelist = Constants.baseurl + "loaddinelist.php?";
   static const loadeventlist = Constants.baseurl + "loadeventlist.php?";
+  static const signupurl =
+      "https://qlx.com/viejas/php/webservices/register.php";
+
   static final String interviewurl =
       'https://interview-e18de.firebaseio.com/media.json?print=pretty';
 }
