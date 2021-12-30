@@ -80,35 +80,63 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: myAppBar(),
-        body: SingleChildScrollView(
-          child: Stack(alignment: Alignment.center, children: [
-            Container(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(15, 70, 15, 15),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 150,
-                      height: 150,
-                      child: Image.asset('images/Logo.png', fit: BoxFit.fill),
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('images/bg.png'), fit: BoxFit.fill),
+            ),
+          ),
+          SingleChildScrollView(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(15, 150, 15, 15),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 150,
+                          height: 150,
+                          child:
+                              Image.asset('images/Logo.png', fit: BoxFit.fill),
+                        ),
+                        _buildTextField(_playerId, false, 'username'),
+                        SizedBox(height: 15),
+                        _buildTextField(_password, false, 'password'),
+                        _buildSigninButton(context),
+                        _buildForgetPassword(),
+                        SizedBox(height: 25),
+                        _buildSignup(),
+                      ],
                     ),
-                    _buildTextField(_playerId, false, 'username'),
-                    SizedBox(height: 15),
-                    _buildTextField(_password, false, 'password'),
-                    _buildSigninButton(context),
-                    _buildForgetPassword(),
-                    SizedBox(height: 25),
-                    _buildSignup(),
-                  ],
+                  ),
                 ),
+                isLoading ? _buildLoader() : Text(''),
+              ],
+            ),
+          ),
+          Positioned(
+            left: 20,
+            top: 40,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                icon: Image.asset('images/Close.png'),
+                iconSize: 35,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
               ),
             ),
-            isLoading ? _buildLoader() : Text(''),
-          ]),
-        ));
+          ),
+        ],
+      ),
+    );
   }
 
   Row _buildSignup() {
@@ -121,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
             'Need a mobile app account?',
             style: TextStyle(
                 fontWeight: FontWeight.normal,
-                fontSize: 15,
+                fontSize: 18,
                 color: Colors.white),
           ),
         ),
@@ -139,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
             'Signup',
             style: TextStyle(
               fontWeight: FontWeight.normal,
-              fontSize: 15,
+              fontSize: 18,
               color: Colors.white,
               decoration: TextDecoration.underline,
             ),
@@ -155,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Text(
         'Forget Password',
         style: TextStyle(
-            fontWeight: FontWeight.normal, fontSize: 15, color: Colors.white),
+            fontWeight: FontWeight.normal, fontSize: 17, color: Colors.white),
       ),
     );
   }
