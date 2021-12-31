@@ -36,10 +36,17 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     String urlStr = Constants.loginurl;
     var params = {
+<<<<<<< HEAD
       "username": _playerId.text,
       "password": _password.text,
       "device_id": "",
       "onesignal_id": "d93bd7f2-62d9-11ec-bcd4-027c4bea2c61"
+=======
+      'username': _playerId.text,
+      'password': _password.text,
+      'device_id': "",
+      'onesignal_id': ""
+>>>>>>> b43ac22ec6f8c736ef6b2112633bdbf525c8de22
     };
     var url = Uri.parse(urlStr);
     var response = await http.post(
@@ -194,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return InkWell(
       onTap: () {},
       child: Text(
-        'Forget Password',
+        'Forgot Password',
         style: TextStyle(
             fontWeight: FontWeight.normal, fontSize: 17, color: Colors.white),
       ),
