@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
     String url = Constants.loadCasino + "category_id=1&casino_id=30";
     var response = await http.get(Uri.parse(url));
     var json = convert.jsonDecode(response.body);
-    print('json -> $json');
+    // print('json -> $json');
     if (response.statusCode == 200) {
       var usersListArray = Casino.fromJson(json.first);
       // setState(() {

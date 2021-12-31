@@ -73,6 +73,7 @@ class Utils {
       String message = 'message',
       String oktitle = 'Ok',
       String cancelTitle = 'Cancel',
+      bool showCancelButton = true,
       VoidCallback? okCallback,
       VoidCallback? cancelCallback}) async {
     return showDialog<void>(
@@ -97,7 +98,7 @@ class Utils {
                   cancelCallback();
                 }
               },
-              child: Text(cancelTitle),
+              child: Text(showCancelButton ? cancelTitle : ''),
             ),
             TextButton(
               onPressed: () {

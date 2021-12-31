@@ -36,8 +36,8 @@ class _PromotionsState extends State<Promotions> {
     String url = Constants.loadpromotionlist + "player_id=1056471&casino_id=30";
     var response = await http.get(Uri.parse(url));
     var json = convert.jsonDecode(response.body);
-    print('url -> $url');
-    print('json -> $json');
+    // print('url -> $url');
+    // print('json -> $json');
     if (response.statusCode == 200) {
       var usersListArray = PromotionsHead.fromJson(json);
       return usersListArray.users;

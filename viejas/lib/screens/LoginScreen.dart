@@ -8,6 +8,7 @@ import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -35,7 +36,10 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     String urlStr = Constants.loginurl;
     var params = {
-      'playerclubid': _playerId.text,
+      "username": _playerId.text,
+      "password": _password.text,
+      "device_id": "",
+      "onesignal_id": "d93bd7f2-62d9-11ec-bcd4-027c4bea2c61"
     };
     var url = Uri.parse(urlStr);
     var response = await http.post(
@@ -56,8 +60,11 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     if (response.statusCode == 200) {
       if (statusMsg == "Success") {
-        Utils.showAndroidDialog(context, title: statusMsg, message: alertMsg,
-            okCallback: () {
+        saveUserId(resp);
+        Utils.showAndroidDialog(context,
+            title: statusMsg,
+            message: alertMsg,
+            showCancelButton: false, okCallback: () {
           Navigator.pop(context);
         });
       } else {
@@ -66,6 +73,12 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       Utils.showAndroidDialog(context, title: statusMsg, message: alertMsg);
     }
+  }
+
+  Future<void> saveUserId(List<dynamic> resp) async {
+    final prefs = await SharedPreferences.getInstance();
+    String userId = resp[0]['player_id'];
+    prefs.setString(Constants.userID, userId);
   }
 
   Center _buildLoader() {

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:viejas/constants/constants.dart';
+import 'package:viejas/helpers/utils.dart';
 import 'package:viejas/screens/CommonDetail.dart';
 import 'package:viejas/screens/Dining/DiningScreen.dart';
 import 'package:viejas/screens/Gaming/GamingScreen.dart';
@@ -89,13 +92,37 @@ class _SidemenuState extends State<Sidemenu> {
                       MaterialPageRoute(builder: (context) => Settings()),
                     );
                   }),
-                  _buildSideMenuRow('Login.png', 'Login', onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()),
-                    );
-                  }),
+                  FutureBuilder(
+                    future: isUserLogin(),
+                    builder: (BuildContext context, AsyncSnapshot<bool> prefs) {
+                      var x = prefs.data ?? true;
+                      if (x == true) {
+                        return _buildSideMenuRow('Logout.png', 'Logout',
+                            onTap: () {
+                          Utils.showAndroidDialog(context,
+                              title: "Warning",
+                              message: "Are you sure you want to Logout ?",
+                              okCallback: () async {
+                            // Constants.removeUserData();
+                            final prefs = await SharedPreferences.getInstance();
+                            prefs.remove(Constants.userID);
+                            prefs.remove(Constants.onesignaluserID);
+                            setState(() {});
+                          });
+                        });
+                      } else {
+                        return _buildSideMenuRow('Login.png', 'Login',
+                            onTap: () {
+                          Navigator.of(context).pop();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()),
+                          );
+                        });
+                      }
+                    },
+                  ),
                 ],
               ),
             ),
@@ -103,6 +130,15 @@ class _SidemenuState extends State<Sidemenu> {
         ),
       ),
     );
+  }
+
+  Future<bool> isUserLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    String userid = prefs.getString(Constants.userID) ?? "";
+    if (userid == "") {
+      return false;
+    }
+    return true;
   }
 
   void moveToHomePage() {

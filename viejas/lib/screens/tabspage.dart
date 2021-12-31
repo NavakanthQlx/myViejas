@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:viejas/constants/constants.dart';
 import 'package:viejas/screens/bottom_tabs.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
@@ -23,7 +25,7 @@ class _TabsPageState extends State<TabsPage> {
     });
   }
 
-  setupOneSignal() {
+  setupOneSignal() async {
     //Remove this method to stop OneSignal Debugging
     OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
 
@@ -33,6 +35,11 @@ class _TabsPageState extends State<TabsPage> {
     OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
       print("Accepted permission: $accepted");
     });
+
+    final status = await OneSignal.shared.getDeviceState();
+    final String? osUserID = status?.userId;
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(Constants.onesignaluserID, osUserID ?? "");
   }
 
   @override
