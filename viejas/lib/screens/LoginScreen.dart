@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:viejas/screens/forgetpassword.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -192,7 +193,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   InkWell _buildForgetPassword() {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ForgetPasswordScreen()),
+        );
+      },
       child: Text(
         'Forgot Password',
         style: TextStyle(
