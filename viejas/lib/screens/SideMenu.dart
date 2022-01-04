@@ -27,10 +27,24 @@ class _SidemenuState extends State<Sidemenu> {
         color: Colors.grey,
         size: 35,
       ),
-      title: Text(
-        title,
-        style: TextStyle(
-            color: Colors.white70, fontWeight: FontWeight.normal, fontSize: 20),
+      title: Column(
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+                color: Colors.white70,
+                fontWeight: FontWeight.normal,
+                fontSize: 20),
+          ),
+          Container(
+            height: 5,
+            margin: EdgeInsets.only(top: 10),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('images/line.png'), fit: BoxFit.fill),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -95,7 +109,7 @@ class _SidemenuState extends State<Sidemenu> {
                   FutureBuilder(
                     future: isUserLogin(),
                     builder: (BuildContext context, AsyncSnapshot<bool> prefs) {
-                      var x = prefs.data ?? true;
+                      var x = prefs.data ?? false;
                       if (x == true) {
                         return _buildSideMenuRow('Logout.png', 'Logout',
                             onTap: () {

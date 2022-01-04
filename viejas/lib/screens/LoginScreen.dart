@@ -238,33 +238,42 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Container _buildTextField(TextEditingController controller, bool isObscure,
+  Column _buildTextField(TextEditingController controller, bool isObscure,
       String placeholderText) {
-    return Container(
-      height: 40,
-      child: Center(
-        child: TextField(
-          controller: controller,
-          obscureText: isObscure,
-          textAlign: TextAlign.center,
-          cursorColor: Colors.black,
-          style: const TextStyle(
-              fontWeight: FontWeight.normal, fontSize: 20, color: Colors.black),
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(vertical: 0.0),
-            hintText: placeholderText,
-            hintStyle: TextStyle(color: Colors.black),
-            fillColor: Colors.white,
-            filled: true,
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+    return Column(
+      children: [
+        Container(
+          height: 50,
+          child: Center(
+            child: TextField(
+              controller: controller,
+              obscureText: isObscure,
+              textAlign: TextAlign.center,
+              cursorColor: Colors.white38,
+              style: const TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 20,
+                  color: Colors.white),
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(vertical: 0.0),
+                hintText: placeholderText,
+                hintStyle: TextStyle(color: Colors.white60),
+                fillColor: Colors.transparent,
+                filled: true,
+                border: InputBorder.none,
+              ),
             ),
           ),
         ),
-      ),
+        SizedBox(height: 0),
+        Container(
+          height: 5,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('images/line.png'), fit: BoxFit.fill),
+          ),
+        ),
+      ],
     );
   }
 }
