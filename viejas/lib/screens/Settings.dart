@@ -35,7 +35,9 @@ class _SettingsState extends State<Settings> {
       isLoading = true;
     });
     String urlStr = Constants.getprofileurl;
-    var params = {'playerid': '10047323'};
+    //10047323
+    String playerID = await UserManager.getPlayerId();
+    var params = {'playerid': playerID};
     var url = Uri.parse(urlStr);
     var response = await http.post(
       url,
@@ -63,8 +65,10 @@ class _SettingsState extends State<Settings> {
       isLoading = true;
     });
     String urlStr = Constants.updateprofileurl;
+    String playerID = await UserManager.getPlayerId();
+
     var params = {
-      'playerid': '10047323',
+      'playerid': playerID,
       'push_notifications': 1,
       'track_location': 0,
       'biometric': 1

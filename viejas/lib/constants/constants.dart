@@ -22,3 +22,26 @@ class Constants {
   static const userID = "userid";
   static const onesignaluserID = "userid";
 }
+
+class UserManager {
+  static Future<bool> isUserLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    String userid = prefs.getString(Constants.userID) ?? "";
+    if (userid == "") {
+      return false;
+    }
+    return true;
+  }
+
+  static Future<String> getPlayerId() async {
+    final prefs = await SharedPreferences.getInstance();
+    String userid = prefs.getString(Constants.userID) ?? "";
+    return userid;
+  }
+
+  static Future<String> getOneSignalId() async {
+    final prefs = await SharedPreferences.getInstance();
+    String userid = prefs.getString(Constants.onesignaluserID) ?? "";
+    return userid;
+  }
+}

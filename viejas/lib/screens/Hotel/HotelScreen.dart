@@ -29,7 +29,8 @@ class _HotelScreenState extends State<HotelScreen> {
       Utils.showToast('Please check your Internet Connection');
       return [];
     }
-    String url = Constants.loadeventlist + "player_id=1056471&casino_id=30";
+    String playerID = await UserManager.getPlayerId();
+    String url = Constants.loadeventlist + "player_id=$playerID&casino_id=30";
     var response = await http.get(Uri.parse(url));
     var json = convert.jsonDecode(response.body);
     print('url -> $url');

@@ -107,7 +107,7 @@ class _SidemenuState extends State<Sidemenu> {
                     );
                   }),
                   FutureBuilder(
-                    future: isUserLogin(),
+                    future: UserManager.isUserLogin(),
                     builder: (BuildContext context, AsyncSnapshot<bool> prefs) {
                       var x = prefs.data ?? false;
                       if (x == true) {
@@ -144,15 +144,6 @@ class _SidemenuState extends State<Sidemenu> {
         ),
       ),
     );
-  }
-
-  Future<bool> isUserLogin() async {
-    final prefs = await SharedPreferences.getInstance();
-    String userid = prefs.getString(Constants.userID) ?? "";
-    if (userid == "") {
-      return false;
-    }
-    return true;
   }
 
   void moveToHomePage() {

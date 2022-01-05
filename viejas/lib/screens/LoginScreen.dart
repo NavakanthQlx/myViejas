@@ -265,7 +265,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ),
-        SizedBox(height: 0),
         Container(
           height: 5,
           decoration: BoxDecoration(
