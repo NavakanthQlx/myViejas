@@ -18,33 +18,78 @@ class Sidemenu extends StatefulWidget {
 }
 
 class _SidemenuState extends State<Sidemenu> {
-  ListTile _buildSideMenuRow(String imageName, String title,
+  // ListTile _buildSideMenuRow(String imageName, String title,
+  //     {VoidCallback? onTap}) {
+  //   return ListTile(
+  //     onTap: onTap,
+  //     leading: ImageIcon(
+  //       AssetImage("images/$imageName"),
+  //       color: Colors.grey,
+  //       size: 35,
+  //     ),
+  //     title: Column(
+  //       children: [
+  //         Text(
+  //           title,
+  //           style: TextStyle(
+  //               color: Colors.white70,
+  //               fontWeight: FontWeight.normal,
+  //               fontSize: 20),
+  //         ),
+  //         Container(
+  //           height: 5,
+  //           margin: EdgeInsets.only(top: 10),
+  //           decoration: BoxDecoration(
+  //             image: DecorationImage(
+  //                 image: AssetImage('images/line.png'), fit: BoxFit.fill),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  Widget _buildSideMenuRow(String imageName, String title,
       {VoidCallback? onTap}) {
-    return ListTile(
+    return InkWell(
       onTap: onTap,
-      leading: ImageIcon(
-        AssetImage("images/$imageName"),
-        color: Colors.grey,
-        size: 35,
-      ),
-      title: Column(
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-                color: Colors.white70,
-                fontWeight: FontWeight.normal,
-                fontSize: 20),
-          ),
-          Container(
-            height: 5,
-            margin: EdgeInsets.only(top: 10),
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('images/line.png'), fit: BoxFit.fill),
+      child: Container(
+        padding: EdgeInsets.all(5),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                ImageIcon(
+                  AssetImage("images/$imageName"),
+                  color: Colors.grey,
+                  size: 30,
+                ),
+                SizedBox(
+                  width: 25,
+                ),
+                Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.white70,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 20),
+                ),
+              ],
             ),
-          ),
-        ],
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 5,
+              padding: EdgeInsets.symmetric(horizontal: 100),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage('images/line.png'), fit: BoxFit.fill),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -61,6 +106,7 @@ class _SidemenuState extends State<Sidemenu> {
               padding: const EdgeInsets.fromLTRB(10, 40, 10, 70),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _buildSideMenuRow('Home.png', 'Home', onTap: () {
                     moveToHomePage();
@@ -109,6 +155,7 @@ class _SidemenuState extends State<Sidemenu> {
                   FutureBuilder(
                     future: UserManager.isUserLogin(),
                     builder: (BuildContext context, AsyncSnapshot<bool> prefs) {
+                      print('isuserloggedin -> ${prefs.data}');
                       var x = prefs.data ?? false;
                       if (x == true) {
                         return _buildSideMenuRow('Logout.png', 'Logout',
