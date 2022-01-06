@@ -20,7 +20,7 @@ class Constants {
       'https://interview-e18de.firebaseio.com/media.json?print=pretty';
 
   static const userID = "userid";
-  static const onesignaluserID = "userid";
+  static const onesignaluserID = "onesignaluserid";
 }
 
 class UserManager {
