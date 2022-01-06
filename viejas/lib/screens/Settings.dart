@@ -37,6 +37,7 @@ class _SettingsState extends State<Settings> {
     String urlStr = Constants.getprofileurl;
     //10047323
     String playerID = await UserManager.getPlayerId();
+    print('playerID: ${playerID}');
     var params = {'playerid': playerID};
     var url = Uri.parse(urlStr);
     var response = await http.post(
