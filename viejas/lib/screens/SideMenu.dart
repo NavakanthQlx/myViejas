@@ -94,6 +94,20 @@ class _SidemenuState extends State<Sidemenu> {
     );
   }
 
+  var isUserLoggedIn = false;
+
+  getIsUserLoggedIn() async {
+    isUserLoggedIn = await UserManager.isUserLogin();
+    setState(() {});
+  }
+
+  @override
+  initState() {
+    super.initState();
+    getIsUserLoggedIn();
+    print('isUserLoggedIn ***--> $isUserLoggedIn');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -112,7 +126,11 @@ class _SidemenuState extends State<Sidemenu> {
                     moveToHomePage();
                   }),
                   _buildSideMenuRow('Offers.png', 'Offers', onTap: () {
-                    moveToOffersPage();
+                    if (isUserLoggedIn) {
+                      moveToOffersPage();
+                    } else {
+                      moveToLoginScreen();
+                    }
                   }),
                   _buildSideMenuRow('Promotions.png', 'Promotions', onTap: () {
                     moveToPromotionsPage();
@@ -138,19 +156,14 @@ class _SidemenuState extends State<Sidemenu> {
                     moveToCommonDetailPage();
                   }),
                   _buildSideMenuRow('Map.png', 'Map', onTap: () {
-                    // Navigator.of(context).pop();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => TabsPage(selectedIndex: 1)),
-                    );
+                    moveToMapPage();
                   }),
                   _buildSideMenuRow('Settings.png', 'Settings', onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Settings()),
-                    );
+                    if (isUserLoggedIn) {
+                      moveToSettingsScreen();
+                    } else {
+                      moveToLoginScreen();
+                    }
                   }),
                   FutureBuilder(
                     future: UserManager.isUserLogin(),
@@ -168,18 +181,13 @@ class _SidemenuState extends State<Sidemenu> {
                             final prefs = await SharedPreferences.getInstance();
                             prefs.remove(Constants.userID);
                             prefs.remove(Constants.onesignaluserID);
-                            setState(() {});
+                            getIsUserLoggedIn();
                           });
                         });
                       } else {
                         return _buildSideMenuRow('Login.png', 'Login',
                             onTap: () {
-                          Navigator.of(context).pop();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginScreen()),
-                          );
+                          moveToLoginScreen();
                         });
                       }
                     },
@@ -191,6 +199,25 @@ class _SidemenuState extends State<Sidemenu> {
         ),
       ),
     );
+  }
+
+  void moveToSettingsScreen() {
+    Navigator.of(context).pop();
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Settings()),
+    );
+  }
+
+  void moveToLoginScreen() async {
+    Navigator.of(context).pop();
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+    );
+    if (result == true) {
+      getIsUserLoggedIn();
+    }
   }
 
   void moveToHomePage() {
@@ -218,6 +245,14 @@ class _SidemenuState extends State<Sidemenu> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => TabsPage(selectedIndex: 3)),
+    );
+  }
+
+  void moveToMapPage() {
+    Navigator.of(context).pop();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => TabsPage(selectedIndex: 1)),
     );
   }
 

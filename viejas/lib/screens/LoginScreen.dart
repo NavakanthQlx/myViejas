@@ -66,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
             title: statusMsg,
             message: alertMsg,
             showCancelButton: false, okCallback: () {
-          Navigator.pop(context);
+          Navigator.pop(context, true);
         });
       } else {
         Utils.showAndroidDialog(context, title: statusMsg, message: alertMsg);

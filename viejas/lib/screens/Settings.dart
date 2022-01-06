@@ -205,9 +205,11 @@ class _SettingsState extends State<Settings> {
           SizedBox(
             width: 10,
           ),
-          Text(
-            value,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
           )
         ],
       ),
