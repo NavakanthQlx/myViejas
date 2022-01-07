@@ -172,6 +172,7 @@ class _PromotionsState extends State<Promotions> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // _buildSectionHeader(),
                 Text(
                   promotionObj.promotitle,
                   style: TextStyle(
@@ -215,6 +216,16 @@ class _PromotionsState extends State<Promotions> {
         color: Colors.red,
         size: 50.0,
       ),
+    );
+  }
+
+  Widget _buildSectionHeader() {
+    return Text(
+      'Promotion',
+      style: TextStyle(
+          overflow: TextOverflow.clip,
+          fontSize: 20,
+          fontWeight: FontWeight.bold),
     );
   }
 }
