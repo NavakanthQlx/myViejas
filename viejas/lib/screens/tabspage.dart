@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:viejas/constants/constants.dart';
+import 'package:viejas/screens/LoginScreen.dart';
 import 'package:viejas/screens/bottom_tabs.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
@@ -16,9 +17,18 @@ class TabsPage extends StatefulWidget {
 
 class _TabsPageState extends State<TabsPage> {
   int _selectedIndex = 0;
+  var isUserLoggedIn = false;
+
+  getIsUserLoggedIn() async {
+    isUserLoggedIn = await UserManager.isUserLogin();
+    setState(() {});
+  }
 
   void _onItemTapped(int index) {
     setState(() {
+      if (index == 3 || index == 4) {
+        getIsUserLoggedIn();
+      }
       widget.selectedIndex = index;
       _selectedIndex = widget.selectedIndex;
       print(_selectedIndex);
@@ -47,62 +57,96 @@ class _TabsPageState extends State<TabsPage> {
     _onItemTapped(widget.selectedIndex);
     super.initState();
     setupOneSignal();
+    getIsUserLoggedIn();
+  }
+
+  Widget _buildBody() {
+    if (isUserLoggedIn) {
+      return _buildTabbarBody();
+    } else {
+      if (_selectedIndex == 3 || _selectedIndex == 4) {
+        return LoginScreen();
+      } else {
+        return _buildTabbarBody();
+      }
+    }
+  }
+
+  Widget? _buildBottomBar() {
+    if (isUserLoggedIn) {
+      return _buildTabbar();
+    } else {
+      if (_selectedIndex == 3 || _selectedIndex == 4) {
+        return null;
+      } else {
+        return _buildTabbar();
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    print('Tabpage -> $isUserLoggedIn');
     return Scaffold(
       body: Scaffold(
-        body: IndexedStack(
-          index: widget.selectedIndex,
-          children: [
-            for (final tabItem in TabNavigationItem.items) tabItem.page,
-          ],
+        body: _buildBody(),
+      ),
+      bottomNavigationBar: _buildBottomBar(),
+    );
+  }
+
+  BottomNavigationBar _buildTabbar() {
+    return BottomNavigationBar(
+      backgroundColor: Colors.black,
+      type: BottomNavigationBarType.fixed,
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: ImageIcon(
+            AssetImage("images/Home.png"),
+          ),
+          label: 'HOME',
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage("images/Home.png"),
-            ),
-            label: 'HOME',
+        BottomNavigationBarItem(
+          icon: ImageIcon(
+            AssetImage("images/Map.png"),
           ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage("images/Map.png"),
-            ),
-            label: 'MAP',
+          label: 'MAP',
+        ),
+        BottomNavigationBarItem(
+          icon: ImageIcon(
+            AssetImage("images/Promotions.png"),
           ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage("images/Promotions.png"),
-            ),
-            label: 'PROMOTIONS',
+          label: 'PROMOTIONS',
+        ),
+        BottomNavigationBarItem(
+          icon: ImageIcon(
+            AssetImage("images/Offers.png"),
           ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage("images/Offers.png"),
-            ),
-            label: 'OFFERS',
+          label: 'OFFERS',
+        ),
+        BottomNavigationBarItem(
+          icon: ImageIcon(
+            AssetImage("images/Balance.png"),
           ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage("images/Balance.png"),
-            ),
-            label: 'BALANCE',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.red,
-        unselectedItemColor: Colors.white,
-        showUnselectedLabels: true,
-        selectedFontSize: 11,
-        unselectedFontSize: 11,
-        onTap: _onItemTapped,
-      ),
+          label: 'BALANCE',
+        ),
+      ],
+      currentIndex: _selectedIndex,
+      selectedItemColor: Colors.red,
+      unselectedItemColor: Colors.white,
+      showUnselectedLabels: true,
+      selectedFontSize: 11,
+      unselectedFontSize: 11,
+      onTap: _onItemTapped,
+    );
+  }
+
+  IndexedStack _buildTabbarBody() {
+    return IndexedStack(
+      index: widget.selectedIndex,
+      children: [
+        for (final tabItem in TabNavigationItem.items) tabItem.page,
+      ],
     );
   }
 }

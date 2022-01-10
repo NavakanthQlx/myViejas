@@ -10,6 +10,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:viejas/screens/forgetpassword.dart';
+import 'package:viejas/screens/tabspage.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -143,7 +144,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 icon: Image.asset('images/Close.png'),
                 iconSize: 35,
                 onPressed: () {
-                  Navigator.pop(context);
+                  // Navigator.pop(context);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TabsPage(selectedIndex: 0),
+                    ),
+                  );
                 },
               ),
             ),
