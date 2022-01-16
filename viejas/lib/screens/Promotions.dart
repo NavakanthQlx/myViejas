@@ -83,12 +83,25 @@ class _PromotionsState extends State<Promotions> {
   ListView _buildGridView(BuildContext context, List<PromotionsList> users) {
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: users.length + 1,
+      itemCount: users.length + 2,
       itemBuilder: (contex, index) {
         if (index == 0) {
           return _buildHeaderImage();
+        } else if (index == 1) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: Text(
+                'PROMOTIONS',
+                style: TextStyle(
+                    overflow: TextOverflow.clip,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          );
         } else {
-          return _buildPromotionCell(context, users[index - 1]);
+          return _buildPromotionCell(context, users[index - 2]);
         }
       },
     );
