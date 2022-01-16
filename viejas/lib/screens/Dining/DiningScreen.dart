@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:viejas/helpers/widgets.dart';
+import 'package:viejas/model/dining.dart';
+import 'package:viejas/model/diningModel.dart';
 import 'package:viejas/model/events.dart';
 import 'package:viejas/constants/constants.dart';
 import 'package:viejas/helpers/utils.dart';
@@ -21,6 +23,9 @@ class DiningScreen extends StatefulWidget {
 }
 
 class _DiningScreenState extends State<DiningScreen> {
+  String? bannerImageUrl;
+  String? headerTitle;
+
   Future<dynamic> getDataFromAPI() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile ||
@@ -30,15 +35,20 @@ class _DiningScreenState extends State<DiningScreen> {
       Utils.showToast('Please check your Internet Connection');
       return [];
     }
-    String playerID = await UserManager.getPlayerId();
-    String url = Constants.loadeventlist + "player_id=$playerID&casino_id=30";
-    var response = await http.get(Uri.parse(url));
+    String urlStr = Constants.getDiningUrl;
+
+    var params = {'casino_id': '30'};
+    var url = Uri.parse(urlStr);
+    var response = await http.post(
+      url,
+      body: convert.jsonEncode(params),
+    );
     var json = convert.jsonDecode(response.body);
-    print('url -> $url');
-    print('json -> $json');
     if (response.statusCode == 200) {
-      var usersListArray = EventHead.fromJson(json);
-      return usersListArray.users;
+      var usersListArray = diningObjectFromJson(response.body);
+      bannerImageUrl = usersListArray.first.bannerImage;
+      headerTitle = usersListArray.first.mainHeader;
+      return usersListArray.first.venueData;
     } else {
       var error = json['error'];
       return error;
@@ -49,7 +59,8 @@ class _DiningScreenState extends State<DiningScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: myAppBar(),
-      body: Container(child: _buildFuture()),
+      body: Container(
+          margin: EdgeInsets.fromLTRB(0, 0, 0, 30), child: _buildFuture()),
     );
   }
 
@@ -58,8 +69,8 @@ class _DiningScreenState extends State<DiningScreen> {
       future: getDataFromAPI(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data is List<EventsList>?) {
-            List<EventsList>? usersArray = snapshot.data;
+          if (snapshot.data is List<VenueDatum>?) {
+            List<VenueDatum>? usersArray = snapshot.data;
             if (usersArray!.length > 0) {
               return _buildListView(context, usersArray);
             } else {
@@ -77,21 +88,23 @@ class _DiningScreenState extends State<DiningScreen> {
     );
   }
 
-  ListView _buildListView(BuildContext context, List<EventsList> users) {
+  ListView _buildListView(BuildContext context, List<VenueDatum> users) {
     return ListView.builder(
-      itemCount: users.length + 1,
+      itemCount: users.length + 2,
       itemBuilder: (contex, index) {
         if (index == 0) {
           return _buildHeaderImage();
+        } else if (index == 1) {
+          return _buildSectionHeaderText();
         } else {
-          return _buildDiningCell(context, users[index - 1]);
+          return _buildDiningCell(context, users[index - 2]);
         }
       },
     );
   }
 
   Container _buildHeaderImage() {
-    if (widget.bannerImageUrl.isNotEmpty) {
+    if (bannerImageUrl != null) {
       return _buildHeaderImageFromNetwork();
     } else {
       return Container(
@@ -125,7 +138,22 @@ class _DiningScreenState extends State<DiningScreen> {
                 child: const CircularProgressIndicator()),
           ]),
         ),
-        imageUrl: widget.bannerImageUrl,
+        imageUrl: bannerImageUrl ?? "",
+      ),
+    );
+  }
+
+  Padding _buildSectionHeaderText() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Center(
+        child: Text(
+          headerTitle ?? "",
+          style: TextStyle(
+              overflow: TextOverflow.clip,
+              fontSize: 20,
+              fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
@@ -145,7 +173,7 @@ class _DiningScreenState extends State<DiningScreen> {
     );
   }
 
-  Widget _buildDiningCell(BuildContext context, EventsList obj) {
+  Widget _buildDiningCell(BuildContext context, VenueDatum obj) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -182,7 +210,7 @@ class _DiningScreenState extends State<DiningScreen> {
                           child: const CircularProgressIndicator()),
                     ]),
                   ),
-                  imageUrl: obj.img,
+                  imageUrl: obj.venueImage,
                 ),
               ),
             ),
@@ -195,14 +223,14 @@ class _DiningScreenState extends State<DiningScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    obj.eventname,
+                    obj.venueTitle,
                     style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   Text(
-                    obj.description,
+                    obj.venueShortDescription,
                     textAlign: TextAlign.start,
                     style: TextStyle(
                         overflow: TextOverflow.visible,
