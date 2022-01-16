@@ -16,8 +16,17 @@ class Constants {
   static const updateprofileurl =
       "https://qlx.com/viejas/php/webservices/update_profile.php";
 
-  static final String interviewurl =
-      'https://interview-e18de.firebaseio.com/media.json?print=pretty';
+  //TODO:-
+  static const getDiningUrl = Constants.baseurl + "loadvenueslist.php";
+  static const getDiningDetailUrl = Constants.baseurl + "loadvenue_by_id.php";
+  static const getMyViejaslUrl = Constants.baseurl + "loadcasinosinfo.php";
+  static const getMusicLoungesUrl =
+      Constants.baseurl + "loadentertainmentlist.php";
+  static const getViejasOutletUrl = Constants.baseurl + "loadoutletinfo.php";
+  static const getBalanceUrl = Constants.baseurl + "load_balance.php";
+  static const getGamingUrl = Constants.baseurl + "loadgaminginfo.php";
+  static const getGamingDetailUrl =
+      Constants.baseurl + "loadgaminginfo_options.php";
 
   static const userID = "userid";
   static const onesignaluserID = "onesignaluserid";
