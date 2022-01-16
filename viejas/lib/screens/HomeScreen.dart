@@ -255,19 +255,30 @@ class _HomeScreenState extends State<HomeScreen> {
         height: 110,
         width: MediaQuery.of(context).size.width,
         color: Colors.black54,
-        child: _buildLogoutView(),
+        child: FutureBuilder(
+          future: UserManager.getUserObj(),
+          builder: (BuildContext context, AsyncSnapshot<List<String>> prefs) {
+            print('Userdata -> ${prefs.data}');
+            var userArr = prefs.data ?? [];
+            if (userArr.length > 0) {
+              if (userArr[0] != "") {
+                return _buildLoginView(userArr);
+              }
+            }
+            return _buildLogoutView();
+          },
+        ),
       ),
     ]);
   }
 
-  // ignore: unused_element
-  Row _buildLoginView() {
+  Row _buildLoginView(List<String> userArr) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Welcome!',
+          'Welcome! \n ${userArr[1]}',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         SizedBox(
@@ -278,11 +289,11 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              'TIER : BRONZE',
+              'TIER : ${userArr[2]}',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Text(
-              'POINTS : 100',
+              'POINTS : ${userArr[3]}',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             TextButton(

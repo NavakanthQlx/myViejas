@@ -29,6 +29,10 @@ class Constants {
       Constants.baseurl + "loadgaminginfo_options.php";
 
   static const userID = "userid";
+  static const userName = "username";
+  static const tier = "tier";
+  static const points = "points";
+
   static const onesignaluserID = "onesignaluserid";
 }
 
@@ -46,6 +50,15 @@ class UserManager {
     final prefs = await SharedPreferences.getInstance();
     String userid = prefs.getString(Constants.userID) ?? "";
     return userid;
+  }
+
+  static Future<List<String>> getUserObj() async {
+    final prefs = await SharedPreferences.getInstance();
+    String userid = prefs.getString(Constants.userID) ?? "";
+    String userName = prefs.getString(Constants.userName) ?? "";
+    String tier = prefs.getString(Constants.tier) ?? "";
+    String points = prefs.getString(Constants.points) ?? "";
+    return [userid, userName, tier, points];
   }
 
   static Future<String> getOneSignalId() async {

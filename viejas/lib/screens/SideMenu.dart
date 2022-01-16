@@ -181,7 +181,11 @@ class _SidemenuState extends State<Sidemenu> {
                             final prefs = await SharedPreferences.getInstance();
                             prefs.remove(Constants.userID);
                             prefs.remove(Constants.onesignaluserID);
+                            prefs.remove(Constants.userName);
+                            prefs.remove(Constants.tier);
+                            prefs.remove(Constants.points);
                             getIsUserLoggedIn();
+                            moveToHomePage();
                           });
                         });
                       } else {

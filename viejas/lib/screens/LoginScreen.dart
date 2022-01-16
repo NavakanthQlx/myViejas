@@ -87,6 +87,15 @@ class _LoginScreenState extends State<LoginScreen> {
     final prefs = await SharedPreferences.getInstance();
     String userId = resp[0]['player_id'];
     prefs.setString(Constants.userID, userId);
+
+    String userName = resp[0]['Name'];
+    prefs.setString(Constants.userName, userName);
+
+    String tier = resp[0]['tier'];
+    prefs.setString(Constants.tier, tier);
+
+    String points = resp[0]['balance'];
+    prefs.setString(Constants.points, points);
   }
 
   Center _buildLoader() {
