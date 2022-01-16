@@ -88,22 +88,26 @@ class _PromotionsState extends State<Promotions> {
         if (index == 0) {
           return _buildHeaderImage();
         } else if (index == 1) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: Text(
-                'PROMOTIONS',
-                style: TextStyle(
-                    overflow: TextOverflow.clip,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          );
+          return _buildSectionHeaderText();
         } else {
           return _buildPromotionCell(context, users[index - 2]);
         }
       },
+    );
+  }
+
+  Padding _buildSectionHeaderText() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Center(
+        child: Text(
+          'PROMOTIONS',
+          style: TextStyle(
+              overflow: TextOverflow.clip,
+              fontSize: 20,
+              fontWeight: FontWeight.bold),
+        ),
+      ),
     );
   }
 

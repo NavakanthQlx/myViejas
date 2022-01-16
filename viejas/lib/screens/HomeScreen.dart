@@ -12,6 +12,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:viejas/screens/Dining/DiningScreen.dart';
 import 'package:viejas/screens/Gaming/GamingScreen.dart';
 import 'package:viejas/screens/Hotel/HotelScreen.dart';
+import 'package:viejas/screens/MyViejas.dart';
 import 'package:viejas/screens/Promotions.dart';
 import 'package:viejas/screens/SideMenu.dart';
 
@@ -148,6 +149,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             bannerImageUrl: obj.serviceIcon,
                             showAppBar: false,
                           )),
+                );
+                break;
+              case "MYVIEJAS":
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyViejasScreen()),
                 );
                 break;
               default:
