@@ -240,14 +240,4 @@ class _PromotionsState extends State<Promotions> {
       ),
     );
   }
-
-  Widget _buildSectionHeader() {
-    return Text(
-      'Promotion',
-      style: TextStyle(
-          overflow: TextOverflow.clip,
-          fontSize: 20,
-          fontWeight: FontWeight.bold),
-    );
-  }
 }

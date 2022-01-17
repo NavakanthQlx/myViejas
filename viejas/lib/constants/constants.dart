@@ -27,6 +27,7 @@ class Constants {
   static const getGamingUrl = Constants.baseurl + "loadgaminginfo.php";
   static const getGamingDetailUrl =
       Constants.baseurl + "loadgaminginfo_options.php";
+  static const getContactusUrl = Constants.baseurl + "loadcontactusinfo.php";
 
   static const userID = "userid";
   static const userName = "username";
