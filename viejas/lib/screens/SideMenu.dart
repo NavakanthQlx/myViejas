@@ -8,6 +8,7 @@ import 'package:viejas/screens/Gaming/GamingScreen.dart';
 import 'package:viejas/screens/Hotel/HotelScreen.dart';
 import 'package:viejas/screens/LoginScreen.dart';
 import 'package:viejas/screens/Settings.dart';
+import 'package:viejas/screens/contactus.dart';
 import 'package:viejas/screens/tabspage.dart';
 
 class Sidemenu extends StatefulWidget {
@@ -153,7 +154,7 @@ class _SidemenuState extends State<Sidemenu> {
                     moveToCommonDetailPage();
                   }),
                   _buildSideMenuRow('Contactus.png', 'Contact us', onTap: () {
-                    moveToCommonDetailPage();
+                    moveToContactusPage();
                   }),
                   _buildSideMenuRow('Map.png', 'Map', onTap: () {
                     moveToMapPage();
@@ -268,6 +269,16 @@ class _SidemenuState extends State<Sidemenu> {
         builder: (context) => CommonDetailScreen(
           bannerImageUrl: '',
         ),
+      ),
+    );
+  }
+
+  void moveToContactusPage() {
+    Navigator.of(context).pop();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ContactUsScreen(),
       ),
     );
   }

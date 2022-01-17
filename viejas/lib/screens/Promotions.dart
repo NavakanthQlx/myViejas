@@ -12,18 +12,17 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
 
 class Promotions extends StatefulWidget {
-  final String bannerImageUrl;
   final bool showAppBar;
 
-  const Promotions(
-      {Key? key, required this.bannerImageUrl, required this.showAppBar})
-      : super(key: key);
+  const Promotions({Key? key, required this.showAppBar}) : super(key: key);
 
   @override
   _PromotionsState createState() => _PromotionsState();
 }
 
 class _PromotionsState extends State<Promotions> {
+  String bannerImageUrl = "";
+
   Future<dynamic> getDataFromAPI() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile ||
@@ -33,11 +32,16 @@ class _PromotionsState extends State<Promotions> {
       Utils.showToast('Please check your Internet Connection');
       return [];
     }
-    String url = Constants.loadpromotionlist + "player_id=1056471&casino_id=30";
-    var response = await http.get(Uri.parse(url));
-    var json = convert.jsonDecode(response.body);
     // print('url -> $url');
     // print('json -> $json');
+    String urlStr = Constants.loadpromotionlist;
+    var params = {'player_id': "1056471", "casino_id": "30"};
+    var url = Uri.parse(urlStr);
+    var response = await http.post(
+      url,
+      body: convert.jsonEncode(params),
+    );
+    var json = convert.jsonDecode(response.body);
     if (response.statusCode == 200) {
       var usersListArray = PromotionsHead.fromJson(json);
       return usersListArray.users;
@@ -64,6 +68,7 @@ class _PromotionsState extends State<Promotions> {
           if (snapshot.data is List<PromotionsList>?) {
             List<PromotionsList>? usersArray = snapshot.data;
             if (usersArray!.length > 0) {
+              bannerImageUrl = usersArray.first.img;
               return _buildGridView(context, usersArray);
             } else {
               return _showErrorMessage('Empty users');
@@ -112,7 +117,7 @@ class _PromotionsState extends State<Promotions> {
   }
 
   Container _buildHeaderImage() {
-    if (widget.bannerImageUrl.isNotEmpty) {
+    if (bannerImageUrl.isNotEmpty) {
       return _buildHeaderImageFromNetwork();
     } else {
       return Container(
@@ -146,7 +151,7 @@ class _PromotionsState extends State<Promotions> {
                 child: const CircularProgressIndicator()),
           ]),
         ),
-        imageUrl: widget.bannerImageUrl,
+        imageUrl: bannerImageUrl,
       ),
     );
   }

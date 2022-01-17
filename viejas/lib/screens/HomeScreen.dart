@@ -35,8 +35,13 @@ class _HomeScreenState extends State<HomeScreen> {
       Utils.showToast('Please check your Internet Connection');
       return [];
     }
-    String url = Constants.loadCasino + "category_id=1&casino_id=30";
-    var response = await http.get(Uri.parse(url));
+    String urlStr = Constants.loadCasino;
+    var params = {'category_id': "1", "casino_id": "30"};
+    var url = Uri.parse(urlStr);
+    var response = await http.post(
+      url,
+      body: convert.jsonEncode(params),
+    );
     var json = convert.jsonDecode(response.body);
     // print('json -> $json');
     if (response.statusCode == 200) {
@@ -146,7 +151,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => Promotions(
-                            bannerImageUrl: obj.serviceIcon,
                             showAppBar: false,
                           )),
                 );

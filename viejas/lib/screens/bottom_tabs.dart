@@ -33,7 +33,6 @@ class TabNavigationItem {
         ),
         TabNavigationItem(
           page: Promotions(
-            bannerImageUrl: '',
             showAppBar: true,
           ),
           icon: ImageIcon(
