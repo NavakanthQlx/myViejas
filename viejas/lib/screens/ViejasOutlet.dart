@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:grouped_list/grouped_list.dart';
 import 'package:viejas/helpers/widgets.dart';
-import 'package:viejas/model/events.dart';
+import 'package:viejas/model/diningModel.dart';
 import 'package:viejas/constants/constants.dart';
 import 'package:viejas/helpers/utils.dart';
 import 'dart:convert' as convert;
@@ -9,28 +8,19 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:viejas/model/gamingmodel.dart';
-import 'package:viejas/screens/Gaming/GamingDetail.dart';
+import 'package:viejas/model/viejasoutletmodel.dart';
+import 'package:viejas/screens/Dining/DiningDetail.dart';
 
-class GamingGroupedModel {
-  GamingGroupedModel({
-    required this.mainHeader,
-    required this.data,
-  });
-
-  final String mainHeader;
-  final GamingDatum data;
-}
-
-class GamingScreen extends StatefulWidget {
-  const GamingScreen({Key? key}) : super(key: key);
+class ViejasOutletScreen extends StatefulWidget {
+  const ViejasOutletScreen({Key? key}) : super(key: key);
 
   @override
-  _GamingScreenState createState() => _GamingScreenState();
+  _ViejasOutletScreenState createState() => _ViejasOutletScreenState();
 }
 
-class _GamingScreenState extends State<GamingScreen> {
-  String bannerImageUrl = "";
+class _ViejasOutletScreenState extends State<ViejasOutletScreen> {
+  String? bannerImageUrl;
+  String? headerTitle;
 
   Future<dynamic> getDataFromAPI() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -41,8 +31,8 @@ class _GamingScreenState extends State<GamingScreen> {
       Utils.showToast('Please check your Internet Connection');
       return [];
     }
-    String urlStr = Constants.getGamingUrl;
-    var params = {"casino_id": "30"};
+    String urlStr = Constants.getViejasOutletUrl;
+    var params = {'casino_id': '30'};
     var url = Uri.parse(urlStr);
     var response = await http.post(
       url,
@@ -50,8 +40,10 @@ class _GamingScreenState extends State<GamingScreen> {
     );
     var json = convert.jsonDecode(response.body);
     if (response.statusCode == 200) {
-      var usersListArray = gamingRootFromJson(response.body);
-      return usersListArray;
+      var usersListArray = viejasOutletRootFromJson(response.body);
+      bannerImageUrl = usersListArray.first.bannerImage;
+      headerTitle = usersListArray.first.mainHeader;
+      return usersListArray.first.data;
     } else {
       var error = json['error'];
       return error;
@@ -62,7 +54,8 @@ class _GamingScreenState extends State<GamingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: myAppBar(),
-      body: Container(child: _buildFuture()),
+      body: Container(
+          margin: EdgeInsets.fromLTRB(0, 0, 0, 30), child: _buildFuture()),
     );
   }
 
@@ -71,31 +64,12 @@ class _GamingScreenState extends State<GamingScreen> {
       future: getDataFromAPI(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data is List<GamingRoot>?) {
-            List<GamingRoot>? usersArray = snapshot.data;
+          if (snapshot.data is List<ViejasOutletDatum>?) {
+            List<ViejasOutletDatum>? usersArray = snapshot.data;
             if (usersArray!.length > 0) {
-              bannerImageUrl = usersArray.first.bannerImage;
-              List<GamingDatavalue> dataValues = usersArray.first.datavalues;
-              List<GamingGroupedModel> groupedModel = [];
-              for (GamingDatavalue i in dataValues) {
-                if (i.data.length > 1) {
-                  for (GamingDatum j in i.data) {
-                    groupedModel.add(
-                        GamingGroupedModel(mainHeader: i.mainHeader, data: j));
-                  }
-                } else {
-                  groupedModel.add(GamingGroupedModel(
-                      mainHeader: i.mainHeader, data: i.data.first));
-                }
-              }
-              return ListView(
-                children: [
-                  _buildHeaderImage(),
-                  Expanded(child: _buildGroupedListView(groupedModel))
-                ],
-              );
+              return _buildListView(context, usersArray);
             } else {
-              return _showErrorMessage('Empty users');
+              return _showErrorMessage('Something went wrong');
             }
           } else {
             return _showErrorMessage(snapshot.data.toString());
@@ -109,29 +83,23 @@ class _GamingScreenState extends State<GamingScreen> {
     );
   }
 
-  GroupedListView<GamingGroupedModel, String> _buildGroupedListView(
-      List<GamingGroupedModel> _elements) {
-    return GroupedListView<GamingGroupedModel, String>(
-      shrinkWrap: true,
-      elements: _elements,
-      groupBy: (element) => element.mainHeader,
-      useStickyGroupSeparators: false,
-      groupSeparatorBuilder: (String value) => Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          value,
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-      ),
-      itemBuilder: (context, element) {
-        return _buildDiningCell(element.data);
+  ListView _buildListView(BuildContext context, List<ViejasOutletDatum> users) {
+    return ListView.builder(
+      itemCount: users.length + 2,
+      itemBuilder: (contex, index) {
+        if (index == 0) {
+          return _buildHeaderImage();
+        } else if (index == 1) {
+          return _buildSectionHeaderText();
+        } else {
+          return _buildDiningCell(context, users[index - 2]);
+        }
       },
     );
   }
 
   Container _buildHeaderImage() {
-    if (bannerImageUrl.isNotEmpty) {
+    if (bannerImageUrl != null) {
       return _buildHeaderImageFromNetwork();
     } else {
       return Container(
@@ -165,7 +133,22 @@ class _GamingScreenState extends State<GamingScreen> {
                 child: const CircularProgressIndicator()),
           ]),
         ),
-        imageUrl: bannerImageUrl,
+        imageUrl: bannerImageUrl ?? "",
+      ),
+    );
+  }
+
+  Padding _buildSectionHeaderText() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Center(
+        child: Text(
+          headerTitle ?? "",
+          style: TextStyle(
+              overflow: TextOverflow.clip,
+              fontSize: 20,
+              fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
@@ -185,14 +168,14 @@ class _GamingScreenState extends State<GamingScreen> {
     );
   }
 
-  Widget _buildDiningCell(GamingDatum obj) {
+  Widget _buildDiningCell(BuildContext context, ViejasOutletDatum obj) {
     return GestureDetector(
       onTap: () {
         // Navigator.push(
         //   context,
         //   MaterialPageRoute(
         //       builder: (context) =>
-        //           GamingDetail(bannerImageUrl: widget.bannerImageUrl)),
+        //           DiningDetail(bannerImageUrl: widget.bannerImageUrl)),
         // );
       },
       child: Container(

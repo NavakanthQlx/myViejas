@@ -12,6 +12,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:viejas/screens/Dining/DiningScreen.dart';
 import 'package:viejas/screens/Gaming/GamingScreen.dart';
 import 'package:viejas/screens/Hotel/HotelScreen.dart';
+import 'package:viejas/screens/MusicScreen.dart';
 import 'package:viejas/screens/MyViejas.dart';
 import 'package:viejas/screens/Promotions.dart';
 import 'package:viejas/screens/SideMenu.dart';
@@ -122,10 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
               case "GAMING":
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => GamingScreen(
-                            bannerImageUrl: obj.serviceIcon,
-                          )),
+                  MaterialPageRoute(builder: (context) => GamingScreen()),
                 );
                 break;
               case "DINING":
@@ -140,10 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
               case "HOTEL":
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => HotelScreen(
-                            bannerImageUrl: obj.serviceIcon,
-                          )),
+                  MaterialPageRoute(builder: (context) => HotelScreen()),
                 );
                 break;
               case "PROMOTIONS":
@@ -159,6 +154,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => MyViejasScreen()),
+                );
+                break;
+              case "MUSIC AND LOUNGES":
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MusicScreen()),
                 );
                 break;
               default:
@@ -206,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.black54,
                   child: Text(
                     users[index].serviceName,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
               ],

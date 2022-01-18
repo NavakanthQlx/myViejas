@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:viejas/helpers/widgets.dart';
-import 'package:viejas/model/dining.dart';
 import 'package:viejas/model/diningModel.dart';
-import 'package:viejas/model/events.dart';
 import 'package:viejas/constants/constants.dart';
 import 'package:viejas/helpers/utils.dart';
 import 'dart:convert' as convert;
@@ -36,7 +34,6 @@ class _DiningScreenState extends State<DiningScreen> {
       return [];
     }
     String urlStr = Constants.getDiningUrl;
-
     var params = {'casino_id': '30'};
     var url = Uri.parse(urlStr);
     var response = await http.post(
@@ -74,7 +71,7 @@ class _DiningScreenState extends State<DiningScreen> {
             if (usersArray!.length > 0) {
               return _buildListView(context, usersArray);
             } else {
-              return _showErrorMessage('Empty users');
+              return _showErrorMessage('Something went wrong');
             }
           } else {
             return _showErrorMessage(snapshot.data.toString());

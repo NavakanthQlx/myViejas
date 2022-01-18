@@ -7,7 +7,9 @@ import 'package:viejas/screens/Dining/DiningScreen.dart';
 import 'package:viejas/screens/Gaming/GamingScreen.dart';
 import 'package:viejas/screens/Hotel/HotelScreen.dart';
 import 'package:viejas/screens/LoginScreen.dart';
+import 'package:viejas/screens/MusicScreen.dart';
 import 'package:viejas/screens/Settings.dart';
+import 'package:viejas/screens/ViejasOutlet.dart';
 import 'package:viejas/screens/contactus.dart';
 import 'package:viejas/screens/tabspage.dart';
 
@@ -147,11 +149,11 @@ class _SidemenuState extends State<Sidemenu> {
                   }),
                   _buildSideMenuRow('Music.png', 'Music and Lounges',
                       onTap: () {
-                    moveToCommonDetailPage();
+                    moveToMusicPage();
                   }),
                   _buildSideMenuRow('Cart.png', 'Viejas Outlet Centre',
                       onTap: () {
-                    moveToCommonDetailPage();
+                    moveToViejasOutletPage();
                   }),
                   _buildSideMenuRow('Contactus.png', 'Contact us', onTap: () {
                     moveToContactusPage();
@@ -273,6 +275,26 @@ class _SidemenuState extends State<Sidemenu> {
     );
   }
 
+  void moveToViejasOutletPage() {
+    Navigator.of(context).pop();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ViejasOutletScreen(),
+      ),
+    );
+  }
+
+  void moveToMusicPage() {
+    Navigator.of(context).pop();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MusicScreen(),
+      ),
+    );
+  }
+
   void moveToContactusPage() {
     Navigator.of(context).pop();
     Navigator.push(
@@ -288,9 +310,7 @@ class _SidemenuState extends State<Sidemenu> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => GamingScreen(
-          bannerImageUrl: '',
-        ),
+        builder: (context) => GamingScreen(),
       ),
     );
   }
@@ -300,9 +320,7 @@ class _SidemenuState extends State<Sidemenu> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => HotelScreen(
-          bannerImageUrl: '',
-        ),
+        builder: (context) => HotelScreen(),
       ),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:grouped_list/grouped_list.dart';
 import 'package:viejas/helpers/widgets.dart';
-import 'package:viejas/model/events.dart';
 import 'package:viejas/constants/constants.dart';
 import 'package:viejas/helpers/utils.dart';
 import 'dart:convert' as convert;
@@ -8,18 +8,28 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:viejas/screens/Hotel/HotelDetail.dart';
+import 'package:viejas/model/hotelmodel.dart';
+
+class HotelGroupedModel {
+  HotelGroupedModel({
+    required this.mainHeader,
+    required this.data,
+  });
+
+  final String mainHeader;
+  final HotelDatum data;
+}
 
 class HotelScreen extends StatefulWidget {
-  final String bannerImageUrl;
-
-  const HotelScreen({Key? key, required this.bannerImageUrl}) : super(key: key);
+  const HotelScreen({Key? key}) : super(key: key);
 
   @override
   _HotelScreenState createState() => _HotelScreenState();
 }
 
 class _HotelScreenState extends State<HotelScreen> {
+  String bannerImageUrl = "";
+
   Future<dynamic> getDataFromAPI() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile ||
@@ -29,15 +39,17 @@ class _HotelScreenState extends State<HotelScreen> {
       Utils.showToast('Please check your Internet Connection');
       return [];
     }
-    String playerID = await UserManager.getPlayerId();
-    String url = Constants.loadeventlist + "player_id=$playerID&casino_id=30";
-    var response = await http.get(Uri.parse(url));
+    String urlStr = Constants.getHotelsURL;
+    var params = {"casino_id": "30"};
+    var url = Uri.parse(urlStr);
+    var response = await http.post(
+      url,
+      body: convert.jsonEncode(params),
+    );
     var json = convert.jsonDecode(response.body);
-    print('url -> $url');
-    print('json -> $json');
     if (response.statusCode == 200) {
-      var usersListArray = EventHead.fromJson(json);
-      return usersListArray.users;
+      var usersListArray = hotelRootFromJson(response.body);
+      return usersListArray;
     } else {
       var error = json['error'];
       return error;
@@ -57,10 +69,29 @@ class _HotelScreenState extends State<HotelScreen> {
       future: getDataFromAPI(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data is List<EventsList>?) {
-            List<EventsList>? usersArray = snapshot.data;
+          if (snapshot.data is List<HotelRoot>?) {
+            List<HotelRoot>? usersArray = snapshot.data;
             if (usersArray!.length > 0) {
-              return _buildListView(context, usersArray);
+              bannerImageUrl = usersArray.first.bannerImage;
+              List<HotelDatavalue> dataValues = usersArray.first.datavalues;
+              List<HotelGroupedModel> groupedModel = [];
+              for (HotelDatavalue i in dataValues) {
+                if (i.data.length > 1) {
+                  for (HotelDatum j in i.data) {
+                    groupedModel.add(
+                        HotelGroupedModel(mainHeader: i.mainHeader, data: j));
+                  }
+                } else {
+                  groupedModel.add(HotelGroupedModel(
+                      mainHeader: i.mainHeader, data: i.data.first));
+                }
+              }
+              return ListView(
+                children: [
+                  _buildHeaderImage(),
+                  Expanded(child: _buildGroupedListView(groupedModel))
+                ],
+              );
             } else {
               return _showErrorMessage('Empty users');
             }
@@ -76,21 +107,29 @@ class _HotelScreenState extends State<HotelScreen> {
     );
   }
 
-  ListView _buildListView(BuildContext context, List<EventsList> users) {
-    return ListView.builder(
-      itemCount: users.length + 1,
-      itemBuilder: (contex, index) {
-        if (index == 0) {
-          return _buildHeaderImage();
-        } else {
-          return _buildDiningCell(context, users[index - 1]);
-        }
+  GroupedListView<HotelGroupedModel, String> _buildGroupedListView(
+      List<HotelGroupedModel> _elements) {
+    return GroupedListView<HotelGroupedModel, String>(
+      shrinkWrap: true,
+      elements: _elements,
+      groupBy: (element) => element.mainHeader,
+      useStickyGroupSeparators: false,
+      groupSeparatorBuilder: (String value) => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          value,
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+      ),
+      itemBuilder: (context, element) {
+        return _buildDiningCell(element.data);
       },
     );
   }
 
   Container _buildHeaderImage() {
-    if (widget.bannerImageUrl.isNotEmpty) {
+    if (bannerImageUrl.isNotEmpty) {
       return _buildHeaderImageFromNetwork();
     } else {
       return Container(
@@ -124,7 +163,7 @@ class _HotelScreenState extends State<HotelScreen> {
                 child: const CircularProgressIndicator()),
           ]),
         ),
-        imageUrl: widget.bannerImageUrl,
+        imageUrl: bannerImageUrl,
       ),
     );
   }
@@ -144,15 +183,15 @@ class _HotelScreenState extends State<HotelScreen> {
     );
   }
 
-  Widget _buildDiningCell(BuildContext context, EventsList obj) {
+  Widget _buildDiningCell(HotelDatum obj) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  HotelDetail(bannerImageUrl: widget.bannerImageUrl)),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //       builder: (context) =>
+        //           GamingDetail(bannerImageUrl: widget.bannerImageUrl)),
+        // );
       },
       child: Container(
         margin: EdgeInsets.fromLTRB(15, 15, 15, 15),
@@ -181,7 +220,7 @@ class _HotelScreenState extends State<HotelScreen> {
                           child: const CircularProgressIndicator()),
                     ]),
                   ),
-                  imageUrl: obj.img,
+                  imageUrl: obj.imageUrl,
                 ),
               ),
             ),
@@ -194,7 +233,7 @@ class _HotelScreenState extends State<HotelScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    obj.eventname,
+                    obj.title,
                     style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(

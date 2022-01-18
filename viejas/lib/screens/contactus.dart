@@ -2,10 +2,8 @@ import 'package:grouped_list/grouped_list.dart';
 import 'package:viejas/helpers/widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:viejas/helpers/widgets.dart';
 import 'package:viejas/model/contactusmodel.dart';
 import 'package:viejas/model/promotions.dart';
-import 'package:viejas/screens/SideMenu.dart';
 import 'package:viejas/screens/WebViewScreen.dart';
 import 'package:viejas/constants/constants.dart';
 import 'package:viejas/helpers/utils.dart';
@@ -13,13 +11,6 @@ import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
-
-class ContactUsScreen extends StatefulWidget {
-  const ContactUsScreen({Key? key}) : super(key: key);
-
-  @override
-  _ContactUsScreenState createState() => _ContactUsScreenState();
-}
 
 class GroupedModel {
   GroupedModel({
@@ -29,6 +20,13 @@ class GroupedModel {
 
   final String mainHeader;
   final ContactusDatum data;
+}
+
+class ContactUsScreen extends StatefulWidget {
+  const ContactUsScreen({Key? key}) : super(key: key);
+
+  @override
+  _ContactUsScreenState createState() => _ContactUsScreenState();
 }
 
 class _ContactUsScreenState extends State<ContactUsScreen> {
@@ -52,11 +50,8 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
       body: convert.jsonEncode(params),
     );
     var json = convert.jsonDecode(response.body);
-    // print('url -> $url');
-    // print('json -> $json');
     if (response.statusCode == 200) {
       var usersListArray = contactusFromJson(response.body);
-      // print('BannerImage -> ${usersListArray.first.bannerImage}');
       return usersListArray;
     } else {
       var error = json['error'];
@@ -121,10 +116,6 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
       shrinkWrap: true,
       elements: _elements,
       groupBy: (element) => element.mainHeader,
-      // groupComparator: (value1, value2) => value2.compareTo(value1),
-      // itemComparator: (item1, item2) =>
-      //     item1['name'].compareTo(item2['name']),
-      // order: GroupedListOrder.ASC,
       useStickyGroupSeparators: false,
       groupSeparatorBuilder: (String value) => Padding(
         padding: const EdgeInsets.all(8.0),

@@ -16,7 +16,6 @@ class Constants {
   static const updateprofileurl =
       "https://qlx.com/viejas/php/webservices/update_profile.php";
 
-  //TODO:-
   static const getDiningUrl = Constants.baseurl + "loadvenueslist.php";
   static const getDiningDetailUrl = Constants.baseurl + "loadvenue_by_id.php";
   static const getMyViejaslUrl = Constants.baseurl + "loadcasinosinfo.php";
@@ -28,6 +27,7 @@ class Constants {
   static const getGamingDetailUrl =
       Constants.baseurl + "loadgaminginfo_options.php";
   static const getContactusUrl = Constants.baseurl + "loadcontactusinfo.php";
+  static const getHotelsURL = Constants.baseurl + "loadhotelsinfo.php";
 
   static const userID = "userid";
   static const userName = "username";

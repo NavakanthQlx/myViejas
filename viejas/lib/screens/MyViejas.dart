@@ -68,7 +68,7 @@ class _MyViejasScreenState extends State<MyViejasScreen> {
             if (usersArray!.length > 0) {
               return _buildListView(context, usersArray);
             } else {
-              return _showErrorMessage('Empty users');
+              return _showErrorMessage('Something went wrong');
             }
           } else {
             return _showErrorMessage(snapshot.data.toString());

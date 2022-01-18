@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:viejas/helpers/widgets.dart';
-import 'package:viejas/model/events.dart';
 import 'package:viejas/constants/constants.dart';
 import 'package:viejas/helpers/utils.dart';
 import 'dart:convert' as convert;
@@ -9,27 +8,27 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:viejas/model/gamingmodel.dart';
-import 'package:viejas/screens/Gaming/GamingDetail.dart';
+import 'package:viejas/model/hotelmodel.dart';
+import 'package:viejas/model/musicmodel.dart';
 
-class GamingGroupedModel {
-  GamingGroupedModel({
+class MusicGroupedModel {
+  MusicGroupedModel({
     required this.mainHeader,
     required this.data,
   });
 
   final String mainHeader;
-  final GamingDatum data;
+  final MusicDatum data;
 }
 
-class GamingScreen extends StatefulWidget {
-  const GamingScreen({Key? key}) : super(key: key);
+class MusicScreen extends StatefulWidget {
+  const MusicScreen({Key? key}) : super(key: key);
 
   @override
-  _GamingScreenState createState() => _GamingScreenState();
+  _MusicScreenState createState() => _MusicScreenState();
 }
 
-class _GamingScreenState extends State<GamingScreen> {
+class _MusicScreenState extends State<MusicScreen> {
   String bannerImageUrl = "";
 
   Future<dynamic> getDataFromAPI() async {
@@ -41,7 +40,7 @@ class _GamingScreenState extends State<GamingScreen> {
       Utils.showToast('Please check your Internet Connection');
       return [];
     }
-    String urlStr = Constants.getGamingUrl;
+    String urlStr = Constants.getMusicLoungesUrl;
     var params = {"casino_id": "30"};
     var url = Uri.parse(urlStr);
     var response = await http.post(
@@ -50,7 +49,7 @@ class _GamingScreenState extends State<GamingScreen> {
     );
     var json = convert.jsonDecode(response.body);
     if (response.statusCode == 200) {
-      var usersListArray = gamingRootFromJson(response.body);
+      var usersListArray = musicRootFromJson(response.body);
       return usersListArray;
     } else {
       var error = json['error'];
@@ -71,20 +70,20 @@ class _GamingScreenState extends State<GamingScreen> {
       future: getDataFromAPI(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data is List<GamingRoot>?) {
-            List<GamingRoot>? usersArray = snapshot.data;
+          if (snapshot.data is List<MusicRoot>?) {
+            List<MusicRoot>? usersArray = snapshot.data;
             if (usersArray!.length > 0) {
               bannerImageUrl = usersArray.first.bannerImage;
-              List<GamingDatavalue> dataValues = usersArray.first.datavalues;
-              List<GamingGroupedModel> groupedModel = [];
-              for (GamingDatavalue i in dataValues) {
+              List<MusicDatavalue> dataValues = usersArray.first.datavalues;
+              List<MusicGroupedModel> groupedModel = [];
+              for (MusicDatavalue i in dataValues) {
                 if (i.data.length > 1) {
-                  for (GamingDatum j in i.data) {
+                  for (MusicDatum j in i.data) {
                     groupedModel.add(
-                        GamingGroupedModel(mainHeader: i.mainHeader, data: j));
+                        MusicGroupedModel(mainHeader: i.mainHeader, data: j));
                   }
                 } else {
-                  groupedModel.add(GamingGroupedModel(
+                  groupedModel.add(MusicGroupedModel(
                       mainHeader: i.mainHeader, data: i.data.first));
                 }
               }
@@ -109,9 +108,9 @@ class _GamingScreenState extends State<GamingScreen> {
     );
   }
 
-  GroupedListView<GamingGroupedModel, String> _buildGroupedListView(
-      List<GamingGroupedModel> _elements) {
-    return GroupedListView<GamingGroupedModel, String>(
+  GroupedListView<MusicGroupedModel, String> _buildGroupedListView(
+      List<MusicGroupedModel> _elements) {
+    return GroupedListView<MusicGroupedModel, String>(
       shrinkWrap: true,
       elements: _elements,
       groupBy: (element) => element.mainHeader,
@@ -185,7 +184,7 @@ class _GamingScreenState extends State<GamingScreen> {
     );
   }
 
-  Widget _buildDiningCell(GamingDatum obj) {
+  Widget _buildDiningCell(MusicDatum obj) {
     return GestureDetector(
       onTap: () {
         // Navigator.push(
@@ -222,7 +221,7 @@ class _GamingScreenState extends State<GamingScreen> {
                           child: const CircularProgressIndicator()),
                     ]),
                   ),
-                  imageUrl: obj.imageUrl,
+                  imageUrl: obj.menuUrl,
                 ),
               ),
             ),
