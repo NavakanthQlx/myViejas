@@ -11,6 +11,7 @@ import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:viejas/screens/contactusdetails.dart';
 
 class GroupedModel {
   GroupedModel({
@@ -92,7 +93,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
               return ListView(
                 children: [
                   _buildHeaderImage(),
-                  Expanded(child: _buildGroupedListView(groupedModel))
+                  _buildGroupedListView(groupedModel)
                 ],
               );
             } else {
@@ -126,18 +127,31 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
         ),
       ),
       itemBuilder: (context, element) {
-        return _buildCell(element.data);
+        return _buildCell(element, element.data);
       },
     );
   }
 
-  Widget _buildCell(ContactusDatum obj) {
+  Widget _buildCell(GroupedModel model, ContactusDatum obj) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => WebViewScreen()),
-        );
+        if (obj.directRedirectUrl != "") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => WebViewScreen(
+                      urlString: obj.directRedirectUrl,
+                    )),
+          );
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ContactUsDetailsScreen(
+                      model: model,
+                    )),
+          );
+        }
       },
       child: Container(
         margin: EdgeInsets.fromLTRB(15, 15, 15, 15),
@@ -240,76 +254,6 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
         ),
         imageUrl:
             "https://casinovizion.com/viejasapp/images/contact_us_images/contact_us_image.jpeg",
-      ),
-    );
-  }
-
-  Container _buildPromotionCell(
-      BuildContext context, PromotionsList promotionObj) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(15, 15, 15, 0),
-      child: Row(
-        children: [
-          Container(
-            width: 70.0,
-            height: 70.0,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(35),
-              child: CachedNetworkImage(
-                fit: BoxFit.fill,
-                placeholder: (context, url) => Center(
-                  child: Stack(alignment: Alignment.center, children: [
-                    Container(
-                      height: double.infinity,
-                      child: Image(
-                          fit: BoxFit.fill,
-                          image: AssetImage('images/placeholderimage.jpeg')),
-                    ),
-                    Container(
-                        height: 20,
-                        width: 20,
-                        child: const CircularProgressIndicator()),
-                  ]),
-                ),
-                imageUrl: promotionObj.img,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 15,
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // _buildSectionHeader(),
-                Text(
-                  promotionObj.promotitle,
-                  style: TextStyle(
-                      overflow: TextOverflow.clip,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => WebViewScreen()),
-                    );
-                  },
-                  child: Text(
-                    'Get details of all promotions',
-                    textAlign: TextAlign.end,
-                    style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.white70),
-                  ),
-                )
-              ],
-            ),
-          )
-        ],
       ),
     );
   }

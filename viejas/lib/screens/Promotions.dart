@@ -206,7 +206,10 @@ class _PromotionsState extends State<Promotions> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => WebViewScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => WebViewScreen(
+                                urlString: promotionObj.videourl,
+                              )),
                     );
                   },
                   child: Text(

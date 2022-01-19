@@ -175,9 +175,7 @@ class _DiningScreenState extends State<DiningScreen> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  DiningDetail(bannerImageUrl: widget.bannerImageUrl)),
+          MaterialPageRoute(builder: (context) => DiningDetail()),
         );
       },
       child: Container(

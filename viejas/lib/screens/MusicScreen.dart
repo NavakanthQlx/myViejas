@@ -10,6 +10,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:viejas/model/hotelmodel.dart';
 import 'package:viejas/model/musicmodel.dart';
+import 'package:viejas/screens/WebViewScreen.dart';
 
 class MusicGroupedModel {
   MusicGroupedModel({
@@ -90,7 +91,7 @@ class _MusicScreenState extends State<MusicScreen> {
               return ListView(
                 children: [
                   _buildHeaderImage(),
-                  Expanded(child: _buildGroupedListView(groupedModel))
+                  _buildGroupedListView(groupedModel)
                 ],
               );
             } else {
@@ -187,12 +188,14 @@ class _MusicScreenState extends State<MusicScreen> {
   Widget _buildDiningCell(MusicDatum obj) {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //       builder: (context) =>
-        //           GamingDetail(bannerImageUrl: widget.bannerImageUrl)),
-        // );
+        if (obj.redirectUrl != "") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    WebViewScreen(urlString: obj.redirectUrl)),
+          );
+        }
       },
       child: Container(
         margin: EdgeInsets.fromLTRB(15, 15, 15, 15),

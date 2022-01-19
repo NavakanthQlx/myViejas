@@ -9,6 +9,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:viejas/model/hotelmodel.dart';
+import 'package:viejas/screens/WebViewScreen.dart';
 
 class HotelGroupedModel {
   HotelGroupedModel({
@@ -89,7 +90,7 @@ class _HotelScreenState extends State<HotelScreen> {
               return ListView(
                 children: [
                   _buildHeaderImage(),
-                  Expanded(child: _buildGroupedListView(groupedModel))
+                  _buildGroupedListView(groupedModel)
                 ],
               );
             } else {
@@ -186,12 +187,11 @@ class _HotelScreenState extends State<HotelScreen> {
   Widget _buildDiningCell(HotelDatum obj) {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //       builder: (context) =>
-        //           GamingDetail(bannerImageUrl: widget.bannerImageUrl)),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => WebViewScreen(urlString: obj.redirectUrl)),
+        );
       },
       child: Container(
         margin: EdgeInsets.fromLTRB(15, 15, 15, 15),

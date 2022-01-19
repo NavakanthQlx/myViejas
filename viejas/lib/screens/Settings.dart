@@ -37,8 +37,7 @@ class _SettingsState extends State<Settings> {
     String urlStr = Constants.getprofileurl;
     //10047323
     String playerID = await UserManager.getPlayerId();
-    print('playerID: ${playerID}');
-    var params = {'playerid': playerID};
+    var params = {'player_id': playerID};
     var url = Uri.parse(urlStr);
     var response = await http.post(
       url,
@@ -47,7 +46,7 @@ class _SettingsState extends State<Settings> {
     // print('Response status: ${response.statusCode}');
     // print('Response body: ${response.body}');
     final profile = profileFromJson(response.body);
-    print('Response profilename: ${profile.first.name}');
+    // print('Response profilename: ${profile.first.name}');
     setState(() {
       user = profile.first;
     });

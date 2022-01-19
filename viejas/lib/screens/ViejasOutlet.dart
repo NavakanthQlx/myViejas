@@ -10,6 +10,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:viejas/model/viejasoutletmodel.dart';
 import 'package:viejas/screens/Dining/DiningDetail.dart';
+import 'package:viejas/screens/WebViewScreen.dart';
 
 class ViejasOutletScreen extends StatefulWidget {
   const ViejasOutletScreen({Key? key}) : super(key: key);
@@ -171,12 +172,11 @@ class _ViejasOutletScreenState extends State<ViejasOutletScreen> {
   Widget _buildDiningCell(BuildContext context, ViejasOutletDatum obj) {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //       builder: (context) =>
-        //           DiningDetail(bannerImageUrl: widget.bannerImageUrl)),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => WebViewScreen(urlString: obj.redirectUrl)),
+        );
       },
       child: Container(
         margin: EdgeInsets.fromLTRB(15, 15, 15, 15),

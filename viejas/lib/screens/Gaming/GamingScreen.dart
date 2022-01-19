@@ -91,7 +91,7 @@ class _GamingScreenState extends State<GamingScreen> {
               return ListView(
                 children: [
                   _buildHeaderImage(),
-                  Expanded(child: _buildGroupedListView(groupedModel))
+                  _buildGroupedListView(groupedModel)
                 ],
               );
             } else {
@@ -188,12 +188,10 @@ class _GamingScreenState extends State<GamingScreen> {
   Widget _buildDiningCell(GamingDatum obj) {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //       builder: (context) =>
-        //           GamingDetail(bannerImageUrl: widget.bannerImageUrl)),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => GamingDetail()),
+        );
       },
       child: Container(
         margin: EdgeInsets.fromLTRB(15, 15, 15, 15),

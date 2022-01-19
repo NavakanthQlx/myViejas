@@ -11,16 +11,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:viejas/screens/WebViewScreen.dart';
 
 class DiningDetail extends StatefulWidget {
-  final String bannerImageUrl;
-
-  const DiningDetail({Key? key, required this.bannerImageUrl})
-      : super(key: key);
+  const DiningDetail({Key? key}) : super(key: key);
 
   @override
   _DiningDetailState createState() => _DiningDetailState();
 }
 
 class _DiningDetailState extends State<DiningDetail> {
+  final String bannerImageUrl = "";
+
   Future<dynamic> getDataFromAPI() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile ||
@@ -95,7 +94,7 @@ class _DiningDetailState extends State<DiningDetail> {
   }
 
   Container _buildHeaderImage() {
-    if (widget.bannerImageUrl.isNotEmpty) {
+    if (bannerImageUrl.isNotEmpty) {
       return _buildHeaderImageFromNetwork();
     } else {
       return Container(
@@ -129,7 +128,7 @@ class _DiningDetailState extends State<DiningDetail> {
                 child: const CircularProgressIndicator()),
           ]),
         ),
-        imageUrl: widget.bannerImageUrl,
+        imageUrl: bannerImageUrl,
       ),
     );
   }
@@ -152,10 +151,10 @@ class _DiningDetailState extends State<DiningDetail> {
   Widget _buildDiningCell(BuildContext context, EventsList obj) {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => WebViewScreen()),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => DiningDetail()),
+        );
       },
       child: Column(
         children: [
