@@ -38,6 +38,7 @@ dependencies:
   intl: ^0.17.0
   shared_preferences: ^2.0.6
   grouped_list: ^4.1.0
+  app_settings: ^4.1.1
 
 dev_dependencies:
   flutter_test:
