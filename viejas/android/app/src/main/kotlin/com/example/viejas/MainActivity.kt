@@ -1,4 +1,4 @@
-package com.example.viejas
+package com.qlx.myviejas
 
 import io.flutter.embedding.android.FlutterActivity
 
