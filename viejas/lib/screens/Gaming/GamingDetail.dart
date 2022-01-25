@@ -112,13 +112,13 @@ class _GamingDetailState extends State<GamingDetail> {
     return Container(
       height: 280.0,
       child: CachedNetworkImage(
-        fit: BoxFit.fill,
+        fit: BoxFit.cover,
         placeholder: (context, url) => Center(
           child: Stack(alignment: Alignment.center, children: [
             Container(
               height: double.infinity,
               child: Image(
-                  fit: BoxFit.fill,
+                  fit: BoxFit.cover,
                   image: AssetImage('images/placeholderimage.jpeg')),
             ),
             Container(
@@ -205,13 +205,13 @@ class _GamingDetailState extends State<GamingDetail> {
             width: double.infinity,
             height: 300.0,
             child: CachedNetworkImage(
-              fit: BoxFit.fill,
+              fit: BoxFit.cover,
               placeholder: (context, url) => Center(
                 child: Stack(alignment: Alignment.center, children: [
                   Container(
                     height: 300,
                     child: Image(
-                        fit: BoxFit.fill,
+                        fit: BoxFit.cover,
                         image: AssetImage('images/placeholderimage.jpeg')),
                   ),
                   Container(

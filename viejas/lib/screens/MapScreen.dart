@@ -29,14 +29,14 @@ class _MapScreenState extends State<MapScreen> {
             child: CachedNetworkImage(
               height: double.infinity,
               width: double.infinity,
-              fit: BoxFit.fill,
+              fit: BoxFit.cover,
               placeholder: (context, url) => Center(
                 child: Stack(alignment: Alignment.center, children: [
                   Container(
                     height: double.infinity,
                     width: double.infinity,
                     child: Image(
-                        fit: BoxFit.fill,
+                        fit: BoxFit.cover,
                         image: AssetImage('images/placeholderimage.jpeg')),
                   ),
                   Container(

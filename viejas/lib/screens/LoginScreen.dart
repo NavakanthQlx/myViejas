@@ -115,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage('images/bg.png'), fit: BoxFit.fill),
+                  image: AssetImage('images/bg.png'), fit: BoxFit.cover),
             ),
           ),
           SingleChildScrollView(
@@ -133,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           width: 150,
                           height: 150,
                           child:
-                              Image.asset('images/Logo.png', fit: BoxFit.fill),
+                              Image.asset('images/Logo.png', fit: BoxFit.cover),
                         ),
                         _buildTextField(_playerId, false, 'username'),
                         SizedBox(height: 15),
@@ -291,7 +291,7 @@ class _LoginScreenState extends State<LoginScreen> {
           height: 5,
           decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage('images/line.png'), fit: BoxFit.fill),
+                image: AssetImage('images/line.png'), fit: BoxFit.cover),
           ),
         ),
       ],
