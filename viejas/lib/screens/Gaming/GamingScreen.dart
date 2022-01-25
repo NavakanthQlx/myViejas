@@ -190,7 +190,10 @@ class _GamingScreenState extends State<GamingScreen> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => GamingDetail()),
+          MaterialPageRoute(
+              builder: (context) => GamingDetail(
+                    gamingId: obj.id,
+                  )),
         );
       },
       child: Container(

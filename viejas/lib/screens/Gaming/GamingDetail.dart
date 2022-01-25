@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:viejas/helpers/widgets.dart';
-import 'package:viejas/model/events.dart';
 import 'package:viejas/constants/constants.dart';
 import 'package:viejas/helpers/utils.dart';
 import 'dart:convert' as convert;
@@ -8,17 +7,19 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:viejas/model/gamingdetail.dart';
 import 'package:viejas/screens/WebViewScreen.dart';
 
 class GamingDetail extends StatefulWidget {
-  const GamingDetail({Key? key}) : super(key: key);
+  final String gamingId;
+  const GamingDetail({Key? key, required this.gamingId}) : super(key: key);
 
   @override
   _GamingDetailState createState() => _GamingDetailState();
 }
 
 class _GamingDetailState extends State<GamingDetail> {
-  final String bannerImageUrl = "";
+  String bannerImageUrl = "";
 
   Future<dynamic> getDataFromAPI() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -29,15 +30,17 @@ class _GamingDetailState extends State<GamingDetail> {
       Utils.showToast('Please check your Internet Connection');
       return [];
     }
-    String playerID = await UserManager.getPlayerId();
-    String url = Constants.loadeventlist + "player_id=$playerID&casino_id=30";
-    var response = await http.get(Uri.parse(url));
+    String urlStr = Constants.getGamingDetailUrl;
+    var params = {"casino_id": "30", "id": widget.gamingId};
+    var url = Uri.parse(urlStr);
+    var response = await http.post(
+      url,
+      body: convert.jsonEncode(params),
+    );
     var json = convert.jsonDecode(response.body);
-    print('url -> $url');
-    print('json -> $json');
     if (response.statusCode == 200) {
-      var usersListArray = EventHead.fromJson(json);
-      return usersListArray.users;
+      var usersListArray = gamingDetailRootFromJson(response.body);
+      return usersListArray;
     } else {
       var error = json['error'];
       return error;
@@ -57,9 +60,10 @@ class _GamingDetailState extends State<GamingDetail> {
       future: getDataFromAPI(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data is List<EventsList>?) {
-            List<EventsList>? usersArray = snapshot.data;
+          if (snapshot.data is List<GamingDetailRoot>?) {
+            List<GamingDetailRoot>? usersArray = snapshot.data;
             if (usersArray!.length > 0) {
+              bannerImageUrl = usersArray.first.bannerImage;
               return _buildListView(context, usersArray);
             } else {
               return _showErrorMessage('Empty users');
@@ -76,17 +80,19 @@ class _GamingDetailState extends State<GamingDetail> {
     );
   }
 
-  ListView _buildListView(BuildContext context, List<EventsList> users) {
+  ListView _buildListView(BuildContext context, List<GamingDetailRoot> users) {
     return ListView.builder(
-      itemCount: users.length + 1,
+      itemCount: users.first.datavalues.length + 3,
       shrinkWrap: true,
       itemBuilder: (contex, index) {
         if (index == 0) {
           return _buildHeaderImage();
         } else if (index == 1) {
-          return _buildNewSlots();
+          return _buildNewSlots(users.first);
+        } else if (index == 2) {
+          return _buildNowFeaturing(users.first);
         } else {
-          return _buildDiningCell(context, users[index - 1]);
+          return _buildDiningCell(context, users.first.datavalues[index - 3]);
         }
       },
     );
@@ -147,7 +153,7 @@ class _GamingDetailState extends State<GamingDetail> {
     );
   }
 
-  Widget _buildDiningCell(BuildContext context, EventsList obj) {
+  Widget _buildDiningCell(BuildContext context, GamingDetailDatavalue obj) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -159,14 +165,13 @@ class _GamingDetailState extends State<GamingDetail> {
     );
   }
 
-  Container _buildNewSlots() {
+  Container _buildNewSlots(GamingDetailRoot obj) {
     return Container(
       margin: EdgeInsets.fromLTRB(25, 15, 15, 15),
-      height: 100,
       child: Column(
         children: [
           Text(
-            'THE NEW SLOTS',
+            obj.headerTitle,
             style: TextStyle(
                 overflow: TextOverflow.visible,
                 fontSize: 17,
@@ -174,14 +179,14 @@ class _GamingDetailState extends State<GamingDetail> {
                 color: Colors.white),
           ),
           SizedBox(
-            height: 3,
+            height: 8,
           ),
           Container(height: 3, width: 150, color: Colors.red),
           SizedBox(
             height: 15,
           ),
           Text(
-            'Enjoy the excitement of the best in San Diego casino action with the addition of 1,000 amzing all new slots!',
+            obj.description,
             style: TextStyle(
                 overflow: TextOverflow.visible,
                 fontSize: 15,
@@ -192,35 +197,72 @@ class _GamingDetailState extends State<GamingDetail> {
     );
   }
 
-  Container _buildBottomCell(EventsList obj) {
+  Container _buildNowFeaturing(GamingDetailRoot obj) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(25, 15, 15, obj.features == "" ? 0 : 15),
+      child: Column(
+        children: [
+          Text(
+            obj.features == "" ? "Now Featuring" : "Features Include:",
+            style: TextStyle(
+                overflow: TextOverflow.visible,
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Container(height: 3, width: 150, color: Colors.red),
+          SizedBox(
+            height: obj.features == "" ? 0 : 15,
+          ),
+          Text(
+            obj.features,
+            style: TextStyle(
+                overflow: TextOverflow.visible,
+                fontSize: 15,
+                color: Colors.white),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container _buildBottomCell(GamingDetailDatavalue obj) {
     return Container(
       margin: EdgeInsets.fromLTRB(15, 15, 15, 15),
       // height: 600,
       width: double.infinity,
-      color: Colors.black,
+      decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.all(Radius.circular(8))),
       alignment: Alignment.center,
       child: Column(
         children: [
-          Container(
-            width: double.infinity,
-            height: 300.0,
-            child: CachedNetworkImage(
-              fit: BoxFit.fill,
-              placeholder: (context, url) => Center(
-                child: Stack(alignment: Alignment.center, children: [
-                  Container(
-                    height: 300,
-                    child: Image(
-                        fit: BoxFit.fill,
-                        image: AssetImage('images/placeholderimage.jpeg')),
-                  ),
-                  Container(
-                      height: 20,
-                      width: 20,
-                      child: const CircularProgressIndicator()),
-                ]),
+          Visibility(
+            visible: (obj.imageUrl != "" && obj.imageUrl.contains('.jpg')),
+            child: Container(
+              width: double.infinity,
+              height: obj.imageUrl != "" ? 300.0 : 0,
+              child: CachedNetworkImage(
+                fit: BoxFit.fill,
+                placeholder: (context, url) => Center(
+                  child: Stack(alignment: Alignment.center, children: [
+                    Container(
+                      height: 300,
+                      child: Image(
+                          fit: BoxFit.fill,
+                          image: AssetImage('images/placeholderimage.jpeg')),
+                    ),
+                    Container(
+                        height: 20,
+                        width: 20,
+                        child: const CircularProgressIndicator()),
+                  ]),
+                ),
+                imageUrl: obj.imageUrl,
               ),
-              imageUrl: obj.img,
             ),
           ),
           SizedBox(
@@ -233,22 +275,22 @@ class _GamingDetailState extends State<GamingDetail> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  obj.eventname,
-                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                  obj.title,
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
-                  height: 3,
+                  height: 8,
                 ),
                 Container(height: 3, width: 150, color: Colors.red),
                 SizedBox(
-                  height: 10,
+                  height: 15,
                 ),
                 Text(
                   obj.description,
                   textAlign: TextAlign.start,
                   style: TextStyle(
                       overflow: TextOverflow.visible,
-                      fontSize: 17,
+                      fontSize: 16,
                       fontWeight: FontWeight.normal,
                       color: Colors.white70),
                 )
