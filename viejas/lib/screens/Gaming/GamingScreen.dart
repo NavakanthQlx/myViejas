@@ -150,13 +150,13 @@ class _GamingScreenState extends State<GamingScreen> {
     return Container(
       height: 280.0,
       child: CachedNetworkImage(
-        fit: BoxFit.fill,
+        fit: BoxFit.cover,
         placeholder: (context, url) => Center(
           child: Stack(alignment: Alignment.center, children: [
             Container(
               height: double.infinity,
               child: Image(
-                  fit: BoxFit.fill,
+                  fit: BoxFit.cover,
                   image: AssetImage('images/placeholderimage.jpeg')),
             ),
             Container(
@@ -208,13 +208,13 @@ class _GamingScreenState extends State<GamingScreen> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(35),
                 child: CachedNetworkImage(
-                  fit: BoxFit.fill,
+                  fit: BoxFit.cover,
                   placeholder: (context, url) => Center(
                     child: Stack(alignment: Alignment.center, children: [
                       Container(
                         height: double.infinity,
                         child: Image(
-                            fit: BoxFit.fill,
+                            fit: BoxFit.cover,
                             image: AssetImage('images/placeholderimage.jpeg')),
                       ),
                       Container(

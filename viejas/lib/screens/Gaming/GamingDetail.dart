@@ -124,7 +124,7 @@ class _GamingDetailState extends State<GamingDetail> {
             Container(
               height: double.infinity,
               child: Image(
-                  fit: BoxFit.fill,
+                  fit: BoxFit.cover,
                   image: AssetImage('images/placeholderimage.jpeg')),
             ),
             Container(

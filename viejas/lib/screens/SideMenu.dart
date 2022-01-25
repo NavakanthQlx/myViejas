@@ -88,7 +88,7 @@ class _SidemenuState extends State<Sidemenu> {
               padding: EdgeInsets.symmetric(horizontal: 100),
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('images/line.png'), fit: BoxFit.fill),
+                    image: AssetImage('images/line.png'), fit: BoxFit.cover),
               ),
             ),
           ],

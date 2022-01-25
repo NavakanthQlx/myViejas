@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:viejas/model/profile.dart';
+import 'package:app_settings/app_settings.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -165,7 +166,9 @@ class _SettingsState extends State<Settings> {
       child: Row(
         children: [
           TextButton(
-            onPressed: onTap,
+            onPressed:  () {
+              AppSettings.openAppSettings();
+          },
             child: Row(
               children: [
                 Text(

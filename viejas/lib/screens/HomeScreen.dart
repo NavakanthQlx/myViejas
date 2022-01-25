@@ -180,13 +180,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                   height: double.infinity,
                   child: CachedNetworkImage(
-                    fit: BoxFit.fill,
+                    fit: BoxFit.cover,
                     placeholder: (context, url) => Center(
                       child: Stack(alignment: Alignment.center, children: [
                         Container(
                           height: double.infinity,
                           child: Image(
-                              fit: BoxFit.fill,
+                              fit: BoxFit.cover,
                               image:
                                   AssetImage('images/placeholderimage.jpeg')),
                         ),
@@ -242,14 +242,14 @@ class _HomeScreenState extends State<HomeScreen> {
         child: CachedNetworkImage(
           height: double.infinity,
           width: double.infinity,
-          fit: BoxFit.fill,
+          fit: BoxFit.cover,
           placeholder: (context, url) => Center(
             child: Stack(alignment: Alignment.center, children: [
               Container(
                 height: double.infinity,
                 width: double.infinity,
                 child: Image(
-                    fit: BoxFit.fill,
+                    fit: BoxFit.cover,
                     image: AssetImage('images/placeholderimage.jpeg')),
               ),
               Container(
@@ -290,7 +290,7 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Welcome! \n ${userArr[1]}',
+          'Welcome \n ${userArr[1]}',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         SizedBox(
