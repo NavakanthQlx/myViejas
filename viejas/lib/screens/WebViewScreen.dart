@@ -14,12 +14,33 @@ class WebViewScreen extends StatefulWidget {
 }
 
 class _WebViewScreenState extends State<WebViewScreen> {
+  bool isLoading = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: myAppBar(),
-      body: WebView(
-        initialUrl: widget.urlString,
+      body: Stack(
+        children: [
+          WebView(
+            initialUrl: widget.urlString,
+            onPageStarted: (str) {
+              setState(() {
+                isLoading = false;
+              });
+            },
+            onPageFinished: (finish) {
+              setState(() {
+                isLoading = false;
+              });
+            },
+          ),
+          isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Stack(),
+        ],
       ),
     );
   }
