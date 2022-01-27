@@ -24,6 +24,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
         children: [
           WebView(
             initialUrl: widget.urlString,
+            javascriptMode: JavascriptMode.unrestricted,
             onPageStarted: (str) {
               setState(() {
                 isLoading = false;

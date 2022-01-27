@@ -135,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         _buildTextField(_playerId, false, 'username'),
                         SizedBox(height: 15),
-                        _buildTextField(_password, false, 'password'),
+                        _buildTextField(_password, true, 'password'),
                         _buildSigninButton(context),
                         _buildForgetPassword(),
                         SizedBox(height: 25),
