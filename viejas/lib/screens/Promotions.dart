@@ -162,70 +162,84 @@ class _PromotionsState extends State<Promotions> {
       BuildContext context, PromotionsList promotionObj) {
     return Container(
       margin: EdgeInsets.fromLTRB(15, 15, 15, 0),
-      child: Row(
+      child: Column(
         children: [
-          Container(
-            width: 70.0,
-            height: 70.0,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(35),
-              child: CachedNetworkImage(
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Center(
-                  child: Stack(alignment: Alignment.center, children: [
-                    Container(
-                      height: double.infinity,
-                      child: Image(
-                          fit: BoxFit.cover,
-                          image: AssetImage('images/placeholderimage.jpeg')),
+          Row(
+            children: [
+              Container(
+                width: 70.0,
+                height: 70.0,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(35),
+                  child: CachedNetworkImage(
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Center(
+                      child: Stack(alignment: Alignment.center, children: [
+                        Container(
+                          height: double.infinity,
+                          child: Image(
+                              fit: BoxFit.cover,
+                              image:
+                                  AssetImage('images/placeholderimage.jpeg')),
+                        ),
+                        Container(
+                            height: 20,
+                            width: 20,
+                            child: const CircularProgressIndicator()),
+                      ]),
                     ),
-                    Container(
-                        height: 20,
-                        width: 20,
-                        child: const CircularProgressIndicator()),
-                  ]),
-                ),
-                imageUrl: promotionObj.img,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 15,
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // _buildSectionHeader(),
-                Text(
-                  promotionObj.promotitle,
-                  style: TextStyle(
-                      overflow: TextOverflow.clip,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => WebViewScreen(
-                                urlString: promotionObj.videourl,
-                              )),
-                    );
-                  },
-                  child: Text(
-                    'Get details of all promotions',
-                    textAlign: TextAlign.end,
-                    style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.white70),
+                    imageUrl: promotionObj.img,
                   ),
-                )
-              ],
+                ),
+              ),
+              SizedBox(
+                width: 15,
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // _buildSectionHeader(),
+                    Text(
+                      promotionObj.promotitle,
+                      style: TextStyle(
+                          overflow: TextOverflow.clip,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WebViewScreen(
+                                    urlString: promotionObj.videourl,
+                                  )),
+                        );
+                      },
+                      child: Text(
+                        'Get details of all promotions',
+                        textAlign: TextAlign.end,
+                        style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.white70),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 15, 10, 0),
+            height: 5,
+            padding: EdgeInsets.symmetric(horizontal: 100),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('images/line.png'), fit: BoxFit.cover),
             ),
-          )
+          ),
         ],
       ),
     );

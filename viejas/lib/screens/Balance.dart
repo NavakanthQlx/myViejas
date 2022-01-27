@@ -7,7 +7,6 @@ import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:connectivity/connectivity.dart';
 import 'package:viejas/model/balance.dart';
-import 'package:viejas/model/profile.dart';
 import 'package:viejas/screens/SideMenu.dart';
 
 class Balance extends StatefulWidget {
@@ -85,7 +84,7 @@ class _BalanceState extends State<Balance> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
-            _buildRow('Comp Balance', user?.compBalance ?? ""),
+            // _buildRow('Comp Balance', user?.compBalance ?? ""),
             _buildRow('Redeemable Points', user?.redeemablePoints ?? ""),
             _buildRow('Tier Points', user?.tierPoints ?? ""),
             _buildRow('Current Tier', user?.currentTier ?? ""),
@@ -99,17 +98,30 @@ class _BalanceState extends State<Balance> {
   Container _buildRow(String title, String value) {
     return Container(
       margin: EdgeInsets.all(15),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
         children: [
-          Text(
-            '$title : ',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '$title : ',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                value,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              )
+            ],
           ),
-          Text(
-            value,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          )
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+            height: 5,
+            padding: EdgeInsets.symmetric(horizontal: 100),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('images/line.png'), fit: BoxFit.cover),
+            ),
+          ),
         ],
       ),
     );

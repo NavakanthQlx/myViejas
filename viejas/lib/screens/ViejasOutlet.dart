@@ -180,61 +180,76 @@ class _ViejasOutletScreenState extends State<ViejasOutletScreen> {
       child: Container(
         margin: EdgeInsets.fromLTRB(15, 15, 15, 15),
         alignment: Alignment.topLeft,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Column(
           children: [
-            Container(
-              width: 70.0,
-              height: 70.0,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(35),
-                child: CachedNetworkImage(
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Center(
-                    child: Stack(alignment: Alignment.center, children: [
-                      Container(
-                        height: double.infinity,
-                        child: Image(
-                            fit: BoxFit.cover,
-                            image: AssetImage('images/placeholderimage.jpeg')),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 70.0,
+                  height: 70.0,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(35),
+                    child: CachedNetworkImage(
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Center(
+                        child: Stack(alignment: Alignment.center, children: [
+                          Container(
+                            height: double.infinity,
+                            child: Image(
+                                fit: BoxFit.cover,
+                                image:
+                                    AssetImage('images/placeholderimage.jpeg')),
+                          ),
+                          Container(
+                              height: 20,
+                              width: 20,
+                              child: const CircularProgressIndicator()),
+                        ]),
                       ),
-                      Container(
-                          height: 20,
-                          width: 20,
-                          child: const CircularProgressIndicator()),
-                    ]),
+                      imageUrl: obj.imageUrl,
+                    ),
                   ),
-                  imageUrl: obj.imageUrl,
                 ),
+                SizedBox(
+                  width: 15,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        obj.title,
+                        style: TextStyle(
+                            fontSize: 19, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        obj.description,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                            overflow: TextOverflow.visible,
+                            fontSize: 17,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.white70),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(10, 15, 10, 0),
+              height: 5,
+              padding: EdgeInsets.symmetric(horizontal: 100),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage('images/line.png'), fit: BoxFit.cover),
               ),
             ),
-            SizedBox(
-              width: 15,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    obj.title,
-                    style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    obj.description,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        overflow: TextOverflow.visible,
-                        fontSize: 17,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.white70),
-                  )
-                ],
-              ),
-            )
           ],
         ),
       ),
