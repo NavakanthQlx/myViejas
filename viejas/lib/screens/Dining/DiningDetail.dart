@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:viejas/helpers/widgets.dart';
-import 'package:viejas/model/events.dart';
+import 'package:viejas/model/diningdetail.dart';
 import 'package:viejas/constants/constants.dart';
 import 'package:viejas/helpers/utils.dart';
 import 'dart:convert' as convert;
@@ -11,14 +11,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:viejas/screens/WebViewScreen.dart';
 
 class DiningDetail extends StatefulWidget {
-  const DiningDetail({Key? key}) : super(key: key);
+  final String venueId;
+  const DiningDetail({Key? key, required this.venueId}) : super(key: key);
 
   @override
   _DiningDetailState createState() => _DiningDetailState();
 }
 
 class _DiningDetailState extends State<DiningDetail> {
-  final String bannerImageUrl = "";
+  String bannerImageUrl = "";
+  List<String> timingsArray = [];
 
   Future<dynamic> getDataFromAPI() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -29,15 +31,17 @@ class _DiningDetailState extends State<DiningDetail> {
       Utils.showToast('Please check your Internet Connection');
       return [];
     }
-    String playerID = await UserManager.getPlayerId();
-    String url = Constants.loadeventlist + "player_id=$playerID&casino_id=30";
-    var response = await http.get(Uri.parse(url));
+    String urlStr = Constants.getDiningDetailUrl;
+    var params = {"casino_id": "30", "venue_id": widget.venueId};
+    var url = Uri.parse(urlStr);
+    var response = await http.post(
+      url,
+      body: convert.jsonEncode(params),
+    );
     var json = convert.jsonDecode(response.body);
-    print('url -> $url');
-    print('json -> $json');
     if (response.statusCode == 200) {
-      var usersListArray = EventHead.fromJson(json);
-      return usersListArray.users;
+      var usersListArray = diningDetailRootFromJson(response.body);
+      return usersListArray;
     } else {
       var error = json['error'];
       return error;
@@ -57,9 +61,11 @@ class _DiningDetailState extends State<DiningDetail> {
       future: getDataFromAPI(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data is List<EventsList>?) {
-            List<EventsList>? usersArray = snapshot.data;
+          if (snapshot.data is List<DiningDetailRoot>?) {
+            List<DiningDetailRoot>? usersArray = snapshot.data;
             if (usersArray!.length > 0) {
+              bannerImageUrl = usersArray.first.bannerImage;
+              timingsArray = usersArray.first.dinetime.split("\n");
               return _buildListView(context, usersArray);
             } else {
               return _showErrorMessage('Empty users');
@@ -76,18 +82,20 @@ class _DiningDetailState extends State<DiningDetail> {
     );
   }
 
-  ListView _buildListView(BuildContext context, List<EventsList> users) {
+  ListView _buildListView(BuildContext context, List<DiningDetailRoot> users) {
     return ListView.builder(
-      itemCount: users.length + 1,
+      itemCount: 4,
       itemBuilder: (contex, index) {
         if (index == 0) {
           return _buildHeaderImage();
         } else if (index == 1) {
-          return _buildViewMenu();
+          return _buildViewMenu(users.first.menu);
         } else if (index == 2) {
-          return _buildTimingsCell();
+          return Visibility(
+              visible: timingsArray.length > 1,
+              child: _buildTimingsCell(users.first.dinetime.split("\n")));
         } else {
-          return _buildDiningCell(context, users[index - 1]);
+          return _buildDiningCell(context, users.first);
         }
       },
     );
@@ -148,14 +156,9 @@ class _DiningDetailState extends State<DiningDetail> {
     );
   }
 
-  Widget _buildDiningCell(BuildContext context, EventsList obj) {
+  Widget _buildDiningCell(BuildContext context, DiningDetailRoot obj) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => DiningDetail()),
-        );
-      },
+      onTap: () {},
       child: Column(
         children: [
           _buildBottomCell(obj),
@@ -164,36 +167,64 @@ class _DiningDetailState extends State<DiningDetail> {
     );
   }
 
-  Container _buildViewMenu() {
+  List<Widget> createButton(List<DiningMenu> menu) {
+    List<Widget> menuWidgets = [];
+    for (var obj in menu) {
+      menuWidgets.add(ElevatedButton(
+        style: ElevatedButton.styleFrom(primary: Colors.redAccent),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => WebViewScreen(
+                      urlString: obj.menuLink,
+                    )),
+          );
+        },
+        child: Text(obj.menuTitle),
+      ));
+    }
+    return menuWidgets;
+  }
+
+  Container _buildViewMenu(List<DiningMenu> menu) {
     return Container(
       margin: EdgeInsets.fromLTRB(15, 15, 15, 15),
-      height: 100,
+      padding: EdgeInsets.all(15),
       color: Colors.black,
-      child: Center(
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(primary: Colors.redAccent),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => WebViewScreen()),
-            );
-          },
-          child: Text('View Menu'),
-        ),
+      child: Column(
+        children: createButton(menu),
       ),
     );
   }
 
-  Container _buildTimingsCell() {
+  List<Widget> createText(List<String> timings) {
+    List<Widget> menuWidgets = [];
+    timings.asMap().forEach((index, value) => menuWidgets.add(
+          Padding(
+            padding: index.isOdd ? EdgeInsets.all(3) : EdgeInsets.all(7),
+            child: Text(
+              value,
+              style: TextStyle(
+                  overflow: TextOverflow.visible,
+                  fontSize: index.isOdd ? 16 : 17,
+                  fontWeight: FontWeight.bold,
+                  color: index.isOdd ? Colors.white70 : Colors.white),
+            ),
+          ),
+        ));
+    return menuWidgets;
+  }
+
+  Container _buildTimingsCell(List<String> timings) {
     return Container(
       margin: EdgeInsets.fromLTRB(15, 15, 15, 15),
       padding: EdgeInsets.all(15),
-      height: 150,
       color: Colors.black,
       child: Column(
         children: [
           Text(
-            '5 Dragons Grands',
+            'OUR HOURS',
             style: TextStyle(
                 overflow: TextOverflow.visible,
                 fontSize: 17,
@@ -201,94 +232,53 @@ class _DiningDetailState extends State<DiningDetail> {
                 color: Colors.white),
           ),
           SizedBox(
-            height: 3,
+            height: 8,
           ),
-          Container(height: 3, width: 150, color: Colors.red),
+          Container(height: 3, width: 90, color: Colors.red),
           SizedBox(
             height: 20,
           ),
-          Text(
-            'Sunday - Thursday',
-            style: TextStyle(
-                overflow: TextOverflow.visible,
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-                color: Colors.white),
-          ),
-          SizedBox(
-            height: 7,
-          ),
-          Text(
-            '11am-11pm',
-            style: TextStyle(
-                overflow: TextOverflow.visible,
-                fontSize: 17,
-                fontWeight: FontWeight.normal,
-                color: Colors.white70),
-          ),
+          Column(
+            children: createText(timings),
+          )
         ],
       ),
     );
   }
 
-  Container _buildBottomCell(EventsList obj) {
+  Container _buildBottomCell(DiningDetailRoot obj) {
     return Container(
       margin: EdgeInsets.fromLTRB(15, 15, 15, 15),
-      alignment: Alignment.topLeft,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      alignment: Alignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Container(
-            width: 70.0,
-            height: 70.0,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(35),
-              child: CachedNetworkImage(
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Center(
-                  child: Stack(alignment: Alignment.center, children: [
-                    Container(
-                      height: double.infinity,
-                      child: Image(
-                          fit: BoxFit.cover,
-                          image: AssetImage('images/placeholderimage.jpeg')),
-                    ),
-                    Container(
-                        height: 20,
-                        width: 20,
-                        child: const CircularProgressIndicator()),
-                  ]),
-                ),
-                imageUrl: obj.img,
-              ),
-            ),
+          Text(
+            obj.mainHeader,
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
           ),
           SizedBox(
-            width: 15,
+            height: 8,
           ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  obj.eventname,
-                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  obj.description,
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                      overflow: TextOverflow.visible,
-                      fontSize: 17,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.white70),
-                )
-              ],
-            ),
+          Container(height: 3, width: 150, color: Colors.red),
+          SizedBox(
+            height: 15,
+          ),
+          Text(
+            timingsArray.length == 1
+                ? (obj.longDescription +
+                    "\n\n" +
+                    obj.mainHeader +
+                    " is " +
+                    timingsArray.first)
+                : obj.longDescription,
+            textAlign: TextAlign.start,
+            style: TextStyle(
+                overflow: TextOverflow.visible,
+                fontSize: 16,
+                fontWeight: FontWeight.normal,
+                color: Colors.white70),
           )
         ],
       ),

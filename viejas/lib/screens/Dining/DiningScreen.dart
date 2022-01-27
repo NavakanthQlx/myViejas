@@ -175,7 +175,11 @@ class _DiningScreenState extends State<DiningScreen> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => DiningDetail()),
+          MaterialPageRoute(
+            builder: (context) => DiningDetail(
+              venueId: obj.venueId,
+            ),
+          ),
         );
       },
       child: Container(
