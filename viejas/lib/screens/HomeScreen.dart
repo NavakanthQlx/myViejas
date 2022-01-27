@@ -291,7 +291,7 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Welcome \n ${userArr[1]}',
+          'Welcome \n ${userArr[1]} \n ${userArr[0]}',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         SizedBox(
