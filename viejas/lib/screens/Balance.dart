@@ -68,7 +68,7 @@ class _BalanceState extends State<Balance> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Sidemenu(),
-      appBar: myAppBar(),
+      appBar: myAppBar(context: context),
       backgroundColor: Color.fromRGBO(40, 48, 51, 1),
       body: Container(
         child: Column(

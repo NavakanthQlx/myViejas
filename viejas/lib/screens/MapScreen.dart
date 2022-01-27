@@ -17,7 +17,7 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Sidemenu(),
-      appBar: widget.showAppBar ? myAppBar() : null,
+      appBar: widget.showAppBar ? myAppBar(context: context) : null,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

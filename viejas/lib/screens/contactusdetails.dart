@@ -17,7 +17,7 @@ class _ContactUsDetailsScreenState extends State<ContactUsDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar(),
+      appBar: myAppBar(context: context),
       body: Container(child: _buildListView(context, widget.model)),
     );
   }

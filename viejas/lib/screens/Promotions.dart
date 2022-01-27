@@ -57,7 +57,7 @@ class _PromotionsState extends State<Promotions> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: widget.showAppBar ? Sidemenu() : null,
-      appBar: myAppBar(),
+      appBar: myAppBar(context: context),
       body: Container(child: _buildFuture()),
     );
   }

@@ -62,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Sidemenu(),
-      appBar: myAppBar(),
+      appBar: myAppBar(context: context),
       body: Container(
         child: Column(
           children: [

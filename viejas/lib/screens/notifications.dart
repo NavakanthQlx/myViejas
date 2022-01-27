@@ -14,11 +14,12 @@ class _NotificationsState extends State<Notifications> {
     return Scaffold(
       appBar: myAppBar(),
       body: Container(
-        child: Container(
-          width: 100.0,
-          height: 100.0,
+          child: Center(
+        child: Text(
+          'No Notifications Available',
+          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20),
         ),
-      ),
+      )),
     );
   }
 }

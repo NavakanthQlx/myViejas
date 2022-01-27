@@ -16,7 +16,7 @@ class _OffersState extends State<Offers> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Sidemenu(),
-      appBar: widget.showAppBar ? myAppBar() : null,
+      appBar: widget.showAppBar ? myAppBar(context: context) : null,
       body: Container(
         child: Container(
           width: 100.0,

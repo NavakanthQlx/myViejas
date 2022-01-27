@@ -53,7 +53,7 @@ class _MyViejasScreenState extends State<MyViejasScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar(),
+      appBar: myAppBar(context: context),
       body: Container(
           margin: EdgeInsets.fromLTRB(0, 0, 0, 30), child: _buildFuture()),
     );

@@ -53,7 +53,7 @@ class _ViejasOutletScreenState extends State<ViejasOutletScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar(),
+      appBar: myAppBar(context: context),
       body: Container(
           margin: EdgeInsets.fromLTRB(0, 0, 0, 30), child: _buildFuture()),
     );

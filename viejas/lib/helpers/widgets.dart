@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:viejas/screens/notifications.dart';
 
-AppBar myAppBar() {
+AppBar myAppBar({BuildContext? context}) {
   return AppBar(
     centerTitle: true,
     title: Center(
@@ -14,10 +15,13 @@ AppBar myAppBar() {
       IconButton(
           iconSize: 30,
           onPressed: () => {
-                //  Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => Notifications()),
-                // )
+                if (context != null)
+                  {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Notifications()),
+                    )
+                  }
               },
           icon: Icon(Icons.notifications)),
     ],
