@@ -188,13 +188,16 @@ class _DiningDetailState extends State<DiningDetail> {
     return menuWidgets;
   }
 
-  Container _buildViewMenu(List<DiningMenu> menu) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(15, 15, 15, 15),
-      padding: EdgeInsets.all(15),
-      color: Colors.black,
-      child: Column(
-        children: createButton(menu),
+  Widget _buildViewMenu(List<DiningMenu> menu) {
+    return Visibility(
+      visible: menu.length > 0,
+      child: Container(
+        margin: EdgeInsets.fromLTRB(15, 15, 15, 15),
+        padding: EdgeInsets.all(15),
+        color: Colors.black,
+        child: Column(
+          children: createButton(menu),
+        ),
       ),
     );
   }
@@ -217,32 +220,35 @@ class _DiningDetailState extends State<DiningDetail> {
     return menuWidgets;
   }
 
-  Container _buildTimingsCell(List<String> timings) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(15, 15, 15, 15),
-      padding: EdgeInsets.all(15),
-      color: Colors.black,
-      child: Column(
-        children: [
-          Text(
-            'OUR HOURS',
-            style: TextStyle(
-                overflow: TextOverflow.visible,
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-                color: Colors.white),
-          ),
-          SizedBox(
-            height: 8,
-          ),
-          Container(height: 3, width: 90, color: Colors.red),
-          SizedBox(
-            height: 20,
-          ),
-          Column(
-            children: createText(timings),
-          )
-        ],
+  Widget _buildTimingsCell(List<String> timings) {
+    return Visibility(
+      visible: timings.length > 0,
+      child: Container(
+        margin: EdgeInsets.fromLTRB(15, 15, 15, 15),
+        padding: EdgeInsets.all(15),
+        color: Colors.black,
+        child: Column(
+          children: [
+            Text(
+              'OUR HOURS',
+              style: TextStyle(
+                  overflow: TextOverflow.visible,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            Container(height: 3, width: 90, color: Colors.red),
+            SizedBox(
+              height: 20,
+            ),
+            Column(
+              children: createText(timings),
+            )
+          ],
+        ),
       ),
     );
   }

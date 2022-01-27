@@ -16,6 +16,7 @@ import 'package:viejas/screens/MusicScreen.dart';
 import 'package:viejas/screens/MyViejas.dart';
 import 'package:viejas/screens/Promotions.dart';
 import 'package:viejas/screens/SideMenu.dart';
+import 'package:viejas/screens/tabspage.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -291,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Welcome \n ${userArr[1]} \n ${userArr[0]}',
+          'Welcome \n${userArr[1]}\n${userArr[0]}',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         SizedBox(
@@ -305,19 +306,37 @@ class _HomeScreenState extends State<HomeScreen> {
               'TIER : ${userArr[2]}',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
+            SizedBox(
+              height: 2,
+            ),
             Text(
               'POINTS : ${userArr[3]}',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             TextButton(
-              onPressed: () {},
-              child: Text(
-                'My Offers',
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TabsPage(selectedIndex: 3)),
+                );
+              },
+              child: Row(
+                children: [
+                  Text(
+                    'My Offers',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Image.asset("images/Arrow.png",
+                      width: 20.0, height: 20.0, color: Colors.white)
+                ],
               ),
             )
           ],

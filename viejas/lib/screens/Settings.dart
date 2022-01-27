@@ -132,8 +132,12 @@ class _SettingsState extends State<Settings> {
             }),
             _buildHeader(context, 'Permissions',
                 'viejas uses the following permissions while you use this app.'),
-            _buildButtonImage('Push Notifications', () {}),
-            _buildButtonImage('Location', () {}),
+            _buildButtonImage('Push Notifications', () {
+              AppSettings.openAppSettings();
+            }),
+            _buildButtonImage('Location', () {
+              AppSettings.openLocationSettings();
+            }),
             _buildswitch()
           ],
         ),
@@ -171,7 +175,7 @@ class _SettingsState extends State<Settings> {
         children: [
           TextButton(
             onPressed: () {
-              AppSettings.openAppSettings();
+              onTap();
             },
             child: Row(
               children: [
