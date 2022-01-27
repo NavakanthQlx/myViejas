@@ -1,12 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:viejas/helpers/widgets.dart';
-import 'package:viejas/model/events.dart';
-import 'package:viejas/constants/constants.dart';
-import 'package:viejas/helpers/utils.dart';
-import 'dart:convert' as convert;
-import 'package:http/http.dart' as http;
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:viejas/screens/WebViewScreen.dart';
 import 'package:viejas/screens/contactus.dart';

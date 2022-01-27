@@ -32,7 +32,8 @@ class _DiningDetailState extends State<DiningDetail> {
       return [];
     }
     String urlStr = Constants.getDiningDetailUrl;
-    var params = {"casino_id": "30", "venue_id": widget.venueId};
+    String casinoId = await UserManager.getCasinoId();
+    var params = {"casino_id": casinoId, "venue_id": widget.venueId};
     var url = Uri.parse(urlStr);
     var response = await http.post(
       url,

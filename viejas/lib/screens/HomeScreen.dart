@@ -37,7 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
       return [];
     }
     String urlStr = Constants.loadCasino;
-    var params = {'category_id': "1", "casino_id": "30"};
+    String casinoId = await UserManager.getCasinoId();
+    var params = {'category_id': "1", "casino_id": casinoId};
     var url = Uri.parse(urlStr);
     var response = await http.post(
       url,

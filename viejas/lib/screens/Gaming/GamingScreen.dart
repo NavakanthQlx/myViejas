@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:viejas/helpers/widgets.dart';
-import 'package:viejas/model/events.dart';
 import 'package:viejas/constants/constants.dart';
 import 'package:viejas/helpers/utils.dart';
 import 'dart:convert' as convert;
@@ -42,7 +41,8 @@ class _GamingScreenState extends State<GamingScreen> {
       return [];
     }
     String urlStr = Constants.getGamingUrl;
-    var params = {"casino_id": "30"};
+    String casinoId = await UserManager.getCasinoId();
+    var params = {"casino_id": casinoId};
     var url = Uri.parse(urlStr);
     var response = await http.post(
       url,

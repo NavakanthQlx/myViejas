@@ -33,6 +33,7 @@ class Constants {
   static const userName = "username";
   static const tier = "tier";
   static const points = "points";
+  static const casinoId = "casinoId";
 
   static const onesignaluserID = "onesignaluserid";
 }
@@ -51,6 +52,13 @@ class UserManager {
     final prefs = await SharedPreferences.getInstance();
     String userid = prefs.getString(Constants.userID) ?? "";
     return userid;
+  }
+
+  static Future<String> getCasinoId() async {
+    return "30";
+    // final prefs = await SharedPreferences.getInstance();
+    // String casinoId = prefs.getString(Constants.casinoId) ?? "";
+    // return casinoId;
   }
 
   static Future<List<String>> getUserObj() async {

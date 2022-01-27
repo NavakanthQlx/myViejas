@@ -35,7 +35,9 @@ class _PromotionsState extends State<Promotions> {
     // print('url -> $url');
     // print('json -> $json');
     String urlStr = Constants.loadpromotionlist;
-    var params = {'player_id': "1056471", "casino_id": "30"};
+    String casinoId = await UserManager.getCasinoId();
+    String playerId = await UserManager.getPlayerId();
+    var params = {'player_id': playerId, "casino_id": casinoId};
     var url = Uri.parse(urlStr);
     var response = await http.post(
       url,

@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:viejas/constants/constants.dart';
 import 'package:viejas/helpers/utils.dart';
 import 'package:viejas/helpers/widgets.dart';
-import 'package:intl/intl.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:viejas/model/profile.dart';
 import 'package:app_settings/app_settings.dart';
@@ -166,9 +164,9 @@ class _SettingsState extends State<Settings> {
       child: Row(
         children: [
           TextButton(
-            onPressed:  () {
+            onPressed: () {
               AppSettings.openAppSettings();
-          },
+            },
             child: Row(
               children: [
                 Text(

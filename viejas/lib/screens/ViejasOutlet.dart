@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:viejas/helpers/widgets.dart';
-import 'package:viejas/model/diningModel.dart';
 import 'package:viejas/constants/constants.dart';
 import 'package:viejas/helpers/utils.dart';
 import 'dart:convert' as convert;
@@ -9,7 +8,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:viejas/model/viejasoutletmodel.dart';
-import 'package:viejas/screens/Dining/DiningDetail.dart';
 import 'package:viejas/screens/WebViewScreen.dart';
 
 class ViejasOutletScreen extends StatefulWidget {
@@ -33,7 +31,8 @@ class _ViejasOutletScreenState extends State<ViejasOutletScreen> {
       return [];
     }
     String urlStr = Constants.getViejasOutletUrl;
-    var params = {'casino_id': '30'};
+    String casinoId = await UserManager.getCasinoId();
+    var params = {'casino_id': casinoId};
     var url = Uri.parse(urlStr);
     var response = await http.post(
       url,

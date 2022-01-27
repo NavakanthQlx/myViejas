@@ -41,7 +41,8 @@ class _HotelScreenState extends State<HotelScreen> {
       return [];
     }
     String urlStr = Constants.getHotelsURL;
-    var params = {"casino_id": "30"};
+    String casinoId = await UserManager.getCasinoId();
+    var params = {"casino_id": casinoId};
     var url = Uri.parse(urlStr);
     var response = await http.post(
       url,

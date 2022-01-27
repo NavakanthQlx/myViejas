@@ -3,7 +3,6 @@ import 'package:viejas/helpers/widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:viejas/model/contactusmodel.dart';
-import 'package:viejas/model/promotions.dart';
 import 'package:viejas/screens/WebViewScreen.dart';
 import 'package:viejas/constants/constants.dart';
 import 'package:viejas/helpers/utils.dart';
@@ -44,7 +43,8 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
     }
 
     String urlStr = Constants.getContactusUrl;
-    var params = {"casino_id": "30"};
+    String casinoId = await UserManager.getCasinoId();
+    var params = {"casino_id": casinoId};
     var url = Uri.parse(urlStr);
     var response = await http.post(
       url,

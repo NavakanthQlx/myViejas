@@ -33,7 +33,9 @@ class _CommonDetailScreenState extends State<CommonDetailScreen> {
     }
     //1056471
     String playerID = await UserManager.getPlayerId();
-    String url = Constants.loaddinelist + "player_id=$playerID&casino_id=30";
+    String casinoId = await UserManager.getCasinoId();
+    String url =
+        Constants.loaddinelist + "player_id=$playerID&casino_id=$casinoId";
     var response = await http.get(Uri.parse(url));
     var json = convert.jsonDecode(response.body);
     print('url -> $url');

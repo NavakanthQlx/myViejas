@@ -31,7 +31,8 @@ class _MyViejasScreenState extends State<MyViejasScreen> {
       return [];
     }
     String urlStr = Constants.getMyViejaslUrl;
-    var params = {'casino_id': '30'};
+    String casinoId = await UserManager.getCasinoId();
+    var params = {'casino_id': casinoId};
     var url = Uri.parse(urlStr);
     var response = await http.post(
       url,

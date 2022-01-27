@@ -8,7 +8,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:viejas/model/hotelmodel.dart';
 import 'package:viejas/model/musicmodel.dart';
 import 'package:viejas/screens/WebViewScreen.dart';
 
@@ -42,7 +41,8 @@ class _MusicScreenState extends State<MusicScreen> {
       return [];
     }
     String urlStr = Constants.getMusicLoungesUrl;
-    var params = {"casino_id": "30"};
+    String casinoId = await UserManager.getCasinoId();
+    var params = {"casino_id": casinoId};
     var url = Uri.parse(urlStr);
     var response = await http.post(
       url,

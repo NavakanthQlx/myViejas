@@ -34,7 +34,8 @@ class _DiningScreenState extends State<DiningScreen> {
       return [];
     }
     String urlStr = Constants.getDiningUrl;
-    var params = {'casino_id': '30'};
+    String casinoId = await UserManager.getCasinoId();
+    var params = {'casino_id': casinoId};
     var url = Uri.parse(urlStr);
     var response = await http.post(
       url,

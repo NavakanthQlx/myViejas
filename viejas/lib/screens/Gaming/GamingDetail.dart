@@ -31,7 +31,8 @@ class _GamingDetailState extends State<GamingDetail> {
       return [];
     }
     String urlStr = Constants.getGamingDetailUrl;
-    var params = {"casino_id": "30", "id": widget.gamingId};
+    String casinoId = await UserManager.getCasinoId();
+    var params = {"casino_id": casinoId, "id": widget.gamingId};
     var url = Uri.parse(urlStr);
     var response = await http.post(
       url,
