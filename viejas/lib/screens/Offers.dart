@@ -70,11 +70,11 @@ class _OffersState extends State<Offers> {
         if (snapshot.hasData) {
           if (snapshot.data is List<PromotionsList>?) {
             List<PromotionsList>? usersArray = snapshot.data;
-            if (usersArray!.length > 0) {
+            if (usersArray!.length < 0) {
               bannerImageUrl = usersArray.first.img;
               return _buildGridView(context, usersArray);
             } else {
-              return _showErrorMessage('Empty users');
+              return _showErrorMessage('No Offers Available');
             }
           } else {
             return _showErrorMessage(snapshot.data.toString());
@@ -193,7 +193,10 @@ class _OffersState extends State<Offers> {
 
   Center _showErrorMessage(String errorMessage) {
     return Center(
-      child: Text(errorMessage),
+      child: Text(
+        errorMessage,
+        style: TextStyle(fontSize: 20),
+      ),
     );
   }
 
