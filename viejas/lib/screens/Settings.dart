@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:connectivity/connectivity.dart';
 import 'package:viejas/model/profile.dart';
 import 'package:app_settings/app_settings.dart';
+import 'package:viejas/screens/forgetpassword.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -123,7 +124,12 @@ class _SettingsState extends State<Settings> {
             _buildRow('Birthday', user?.birthDate ?? ""),
             _buildRow('Mobile Number', user?.mobile ?? ""),
             _buildRow('Email', user?.email ?? ""),
-            _buildButtonImage('Reset Password', () {}),
+            _buildButtonImage('Reset Password', () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ForgetPasswordScreen()),
+              );
+            }),
             _buildHeader(context, 'Permissions',
                 'viejas uses the following permissions while you use this app.'),
             _buildButtonImage('Push Notifications', () {}),
