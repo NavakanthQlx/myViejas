@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:viejas/helpers/widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:viejas/screens/WebViewScreen.dart';
-import 'package:viejas/screens/contactus.dart';
+import 'package:viejas/model/offersmodel.dart';
 
 class OfferDetails extends StatefulWidget {
-  const OfferDetails({Key? key}) : super(key: key);
+  final OffersList obj;
+  const OfferDetails({Key? key, required this.obj}) : super(key: key);
 
   @override
   _OfferDetailsState createState() => _OfferDetailsState();
@@ -13,6 +13,12 @@ class OfferDetails extends StatefulWidget {
 
 class _OfferDetailsState extends State<OfferDetails> {
   String bannerImageUrl = "";
+
+  @override
+  void initState() {
+    super.initState();
+    bannerImageUrl = widget.obj.tagBannerimg ?? "";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,49 +86,38 @@ class _OfferDetailsState extends State<OfferDetails> {
     return Container(
       margin: EdgeInsets.fromLTRB(25, 15, 15, 10),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Offer details',
+            widget.obj.title ?? "",
             style: TextStyle(
                 overflow: TextOverflow.visible,
                 fontSize: 17,
                 fontWeight: FontWeight.bold,
                 color: Colors.white),
           ),
+          SizedBox(
+            height: 15,
+          ),
+          Text(
+            widget.obj.validity ?? "",
+            style: TextStyle(
+                overflow: TextOverflow.visible,
+                fontSize: 15,
+                color: Colors.white),
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Text(
+            widget.obj.description ?? "",
+            style: TextStyle(
+                overflow: TextOverflow.visible,
+                fontSize: 14,
+                color: Colors.white),
+          ),
         ],
       ),
     );
   }
-
-  // Container _buildNewSlots(GroupedModel obj) {
-  //   return Container(
-  //     margin: EdgeInsets.fromLTRB(25, 15, 15, 10),
-  //     child: Column(
-  //       children: [
-  //         Text(
-  //           obj.data.pageHeader,
-  //           style: TextStyle(
-  //               overflow: TextOverflow.visible,
-  //               fontSize: 17,
-  //               fontWeight: FontWeight.bold,
-  //               color: Colors.white),
-  //         ),
-  //         SizedBox(
-  //           height: 10,
-  //         ),
-  //         Container(height: 3, width: 150, color: Colors.red),
-  //         SizedBox(
-  //           height: 15,
-  //         ),
-  //         Text(
-  //           obj.data.pageDescription,
-  //           style: TextStyle(
-  //               overflow: TextOverflow.visible,
-  //               fontSize: 15,
-  //               color: Colors.white),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 }

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:viejas/helpers/widgets.dart';
+import 'package:viejas/model/offersmodel.dart';
 import 'package:viejas/model/promotions.dart';
 import 'package:viejas/screens/Offerdetails.dart';
 import 'package:viejas/screens/SideMenu.dart';
@@ -22,8 +23,6 @@ class Offers extends StatefulWidget {
 }
 
 class _OffersState extends State<Offers> {
-  String bannerImageUrl = "";
-
   Future<dynamic> getDataFromAPI() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile ||
@@ -35,10 +34,9 @@ class _OffersState extends State<Offers> {
     }
     // print('url -> $url');
     // print('json -> $json');
-    String urlStr = Constants.loadpromotionlist;
-    String casinoId = await UserManager.getCasinoId();
+    String urlStr = Constants.getOffersURL;
     String playerId = await UserManager.getPlayerId();
-    var params = {'player_id': playerId, "casino_id": casinoId};
+    var params = {'player_id': playerId};
     var url = Uri.parse(urlStr);
     var response = await http.post(
       url,
@@ -46,8 +44,8 @@ class _OffersState extends State<Offers> {
     );
     var json = convert.jsonDecode(response.body);
     if (response.statusCode == 200) {
-      var usersListArray = PromotionsHead.fromJson(json);
-      return usersListArray.users;
+      var usersListArray = offerFromJson(response.body);
+      return usersListArray;
     } else {
       var error = json['error'];
       return error;
@@ -68,10 +66,9 @@ class _OffersState extends State<Offers> {
       future: getDataFromAPI(),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data is List<PromotionsList>?) {
-            List<PromotionsList>? usersArray = snapshot.data;
-            if (usersArray!.length < 0) {
-              bannerImageUrl = usersArray.first.img;
+          if (snapshot.data is List<OffersList>?) {
+            List<OffersList>? usersArray = snapshot.data;
+            if (usersArray!.length > 0) {
               return _buildGridView(context, usersArray);
             } else {
               return _showErrorMessage('No Offers Available');
@@ -88,7 +85,7 @@ class _OffersState extends State<Offers> {
     );
   }
 
-  ListView _buildGridView(BuildContext context, List<PromotionsList> users) {
+  ListView _buildGridView(BuildContext context, List<OffersList> users) {
     return ListView.builder(
       shrinkWrap: true,
       itemCount: users.length,
@@ -98,13 +95,16 @@ class _OffersState extends State<Offers> {
     );
   }
 
-  Widget _buildPromotionCell(
-      BuildContext context, PromotionsList promotionObj) {
+  Widget _buildPromotionCell(BuildContext context, OffersList promotionObj) {
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => OfferDetails()),
+          MaterialPageRoute(
+            builder: (context) => OfferDetails(
+              obj: promotionObj,
+            ),
+          ),
         );
       },
       child: Container(
@@ -135,7 +135,7 @@ class _OffersState extends State<Offers> {
                               child: const CircularProgressIndicator()),
                         ]),
                       ),
-                      imageUrl: promotionObj.img,
+                      imageUrl: promotionObj.tagIcon ?? "",
                     ),
                   ),
                 ),
@@ -148,28 +148,22 @@ class _OffersState extends State<Offers> {
                     children: [
                       // _buildSectionHeader(),
                       Text(
-                        promotionObj.promotitle,
+                        promotionObj.title ?? "",
                         style: TextStyle(
                             overflow: TextOverflow.clip,
                             fontSize: 20,
                             fontWeight: FontWeight.bold),
                       ),
-                      TextButton(
-                        onPressed: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => OfferDetails()),
-                          // );
-                        },
-                        child: Text(
-                          'Get details of all promotions',
-                          textAlign: TextAlign.end,
-                          style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.white70),
-                        ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        promotionObj.validity ?? "",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.white),
                       )
                     ],
                   ),
