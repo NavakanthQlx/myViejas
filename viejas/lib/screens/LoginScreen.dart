@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:viejas/constants/constants.dart';
+import 'package:viejas/helpers/local_auth_api.dart';
 import 'package:viejas/screens/Signup.dart';
 import 'package:viejas/helpers/utils.dart';
 import 'dart:convert' as convert;
@@ -103,6 +104,22 @@ class _LoginScreenState extends State<LoginScreen> {
         size: 50.0,
       ),
     );
+  }
+
+  setupTouchID() async {
+    final isAuthenticated = await LocalAuthApi.authenticate();
+    if (isAuthenticated) {
+      print("object");
+      Utils.showAndroidDialog(context, message: 'isAuthenticated success');
+    } else {
+      Utils.showAndroidDialog(context, message: 'isAuthenticated failed');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setupTouchID();
   }
 
   @override

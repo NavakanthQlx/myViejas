@@ -39,6 +39,7 @@ dependencies:
   shared_preferences: ^2.0.6
   grouped_list: ^4.1.0
   app_settings: ^4.1.1
+  local_auth: ^1.1.10
 
 dev_dependencies:
   flutter_test:
