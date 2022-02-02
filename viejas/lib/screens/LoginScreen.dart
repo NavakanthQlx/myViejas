@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:viejas/constants/constants.dart';
 import 'package:viejas/helpers/local_auth_api.dart';
+import 'package:viejas/helpers/user_secure_storage.dart';
 import 'package:viejas/screens/Signup.dart';
 import 'package:viejas/helpers/utils.dart';
 import 'dart:convert' as convert;
@@ -10,6 +11,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:viejas/screens/forgetpassword.dart';
 import 'package:viejas/screens/tabspage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -95,6 +97,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
     String points = resp[0]['balance'];
     prefs.setString(Constants.points, points);
+
+    await UserSecureStorage.setUsername(_playerId.text);
+    await UserSecureStorage.setPassword(_password.text);
   }
 
   Center _buildLoader() {
@@ -109,10 +114,12 @@ class _LoginScreenState extends State<LoginScreen> {
   setupTouchID() async {
     final isAuthenticated = await LocalAuthApi.authenticate();
     if (isAuthenticated) {
-      print("object");
-      Utils.showAndroidDialog(context, message: 'isAuthenticated success');
+      _playerId.text = await UserSecureStorage.getUsername() ?? '';
+      _password.text = await UserSecureStorage.getPassword() ?? '';
+      hitLoginAPI();
+      // Utils.showAndroidDialog(context, message: 'isAuthenticated success');
     } else {
-      Utils.showAndroidDialog(context, message: 'isAuthenticated failed');
+      Utils.showAndroidDialog(context, message: 'Authentication failed');
     }
   }
 

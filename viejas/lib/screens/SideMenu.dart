@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:viejas/constants/constants.dart';
+import 'package:viejas/helpers/user_secure_storage.dart';
 import 'package:viejas/helpers/utils.dart';
 import 'package:viejas/screens/CommonDetail.dart';
 import 'package:viejas/screens/Dining/DiningScreen.dart';
@@ -187,6 +189,8 @@ class _SidemenuState extends State<Sidemenu> {
                             prefs.remove(Constants.userName);
                             prefs.remove(Constants.tier);
                             prefs.remove(Constants.points);
+                            // final storage = new FlutterSecureStorage();
+                            // await storage.deleteAll();
                             getIsUserLoggedIn();
                             moveToHomePage();
                           });
