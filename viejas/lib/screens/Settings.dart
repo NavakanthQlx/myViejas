@@ -119,15 +119,19 @@ class _SettingsState extends State<Settings> {
           CupertinoSwitch(
               value: isBiometricON,
               onChanged: (newvalue) {
-                setState(() async {
-                  isBiometricON = newvalue;
-                  final prefs = await SharedPreferences.getInstance();
-                  prefs.setBool(Constants.isBioOn, newvalue);
+                isBiometricON = newvalue;
+                setState(() {
+                  updateSharedPref(newvalue);
                 });
               })
         ],
       ),
     );
+  }
+
+  updateSharedPref(bool newvalue) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool(Constants.isBioOn, newvalue);
   }
 
   Container _buildButtonImage(String title, VoidCallback onTap) {
