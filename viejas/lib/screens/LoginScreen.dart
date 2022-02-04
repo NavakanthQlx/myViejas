@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:viejas/constants/constants.dart';
 import 'package:viejas/helpers/local_auth_api.dart';
 import 'package:viejas/helpers/user_secure_storage.dart';
@@ -63,19 +65,38 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     if (response.statusCode == 200) {
       if (statusMsg == "Success") {
-        saveUserId(resp);
-        Utils.showAndroidDialog(context,
-            title: statusMsg,
-            message: alertMsg,
-            showCancelButton: false, okCallback: () {
-          // Navigator.pop(context, true);
+        saveUserDatainDefaultsandKeychain(resp);
+        final prefs = await SharedPreferences.getInstance();
+        var isBioON = prefs.getBool(Constants.isBioOn);
+        if (isBioON != null) {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => TabsPage(selectedIndex: 0),
             ),
           );
-        });
+        } else {
+          Utils.showAndroidDialog(
+            context,
+            title: 'Biometric Login',
+            message: 'Do you want to enable biometric login ?',
+            oktitle: 'Yes',
+            cancelTitle: 'No',
+            showCancelButton: true,
+            okCallback: () {
+              setupTouchID(false);
+            },
+            cancelCallback: () {
+              prefs.setBool(Constants.isBioOn, false);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TabsPage(selectedIndex: 0),
+                ),
+              );
+            },
+          );
+        }
       } else {
         Utils.showAndroidDialog(context, title: statusMsg, message: alertMsg);
       }
@@ -84,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Future<void> saveUserId(List<dynamic> resp) async {
+  Future<void> saveUserDatainDefaultsandKeychain(List<dynamic> resp) async {
     final prefs = await SharedPreferences.getInstance();
     String userId = resp[0]['player_id'];
     prefs.setString(Constants.userID, userId);
@@ -111,22 +132,90 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  setupTouchID() async {
-    final isAuthenticated = await LocalAuthApi.authenticate();
-    if (isAuthenticated) {
-      _playerId.text = await UserSecureStorage.getUsername() ?? '';
-      _password.text = await UserSecureStorage.getPassword() ?? '';
-      hitLoginAPI();
-      // Utils.showAndroidDialog(context, message: 'isAuthenticated success');
-    } else {
-      Utils.showAndroidDialog(context, message: 'Authentication failed');
+  setupTouchID(bool isFromviewwillappear) async {
+    final _auth = LocalAuthentication();
+    try {
+      final isAvailable = await _auth.canCheckBiometrics;
+      if (!isAvailable) {
+        showBioNotAvailablePopup();
+        return;
+      }
+      try {
+        final isSuccess = await _auth.authenticate(
+            localizedReason: 'Scan Fingerprint to Authenticate',
+            useErrorDialogs: true,
+            stickyAuth: true,
+            biometricOnly: false);
+        if (isSuccess) {
+          _playerId.text = await UserSecureStorage.getUsername() ?? '';
+          _password.text = await UserSecureStorage.getPassword() ?? '';
+          if (isFromviewwillappear) {
+            hitLoginAPI();
+          } else {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TabsPage(selectedIndex: 0),
+              ),
+            );
+          }
+        } else {
+          Utils.showAndroidDialog(context, message: 'Authentication failed');
+        }
+      } on PlatformException catch (e) {
+        print(e);
+        Utils.showAndroidDialog(
+          context,
+          title: 'Authentication failed',
+          message: "You could not be verified; please try again.",
+          showCancelButton: false,
+          okCallback: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TabsPage(selectedIndex: 0),
+              ),
+            );
+          },
+        );
+        return;
+      }
+    } on PlatformException catch (e) {
+      print(e);
+      showBioNotAvailablePopup();
+      return;
+    }
+  }
+
+  showBioNotAvailablePopup() {
+    Utils.showAndroidDialog(
+      context,
+      title: 'Biometry unavailable',
+      message: "Your device is not configured for biometric authentication.",
+      showCancelButton: false,
+      okCallback: () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TabsPage(selectedIndex: 0),
+          ),
+        );
+      },
+    );
+  }
+
+  callTouchIDbasedonBio() async {
+    final prefs = await SharedPreferences.getInstance();
+    var isBioON = prefs.getBool(Constants.isBioOn);
+    if (isBioON == true) {
+      setupTouchID(true);
     }
   }
 
   @override
   void initState() {
     super.initState();
-    setupTouchID();
+    callTouchIDbasedonBio();
   }
 
   @override

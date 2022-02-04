@@ -35,6 +35,7 @@ class Constants {
   static const tier = "tier";
   static const points = "points";
   static const casinoId = "casinoId";
+  static const isBioOn = "isBioOn";
 
   static const onesignaluserID = "onesignaluserid";
 }

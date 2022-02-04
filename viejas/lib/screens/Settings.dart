@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:viejas/constants/constants.dart';
 import 'package:viejas/helpers/utils.dart';
 import 'package:viejas/helpers/widgets.dart';
@@ -23,6 +24,16 @@ class _SettingsState extends State<Settings> {
   Profile? user;
 
   Future hitGetProfileAPI() async {
+    final prefs = await SharedPreferences.getInstance();
+    var isBioON = prefs.getBool(Constants.isBioOn);
+    if (isBioON != null) {
+      prefs.setBool(Constants.isBioOn, true);
+      isBiometricON = isBioON;
+    } else {
+      prefs.setBool(Constants.isBioOn, false);
+      isBiometricON = false;
+    }
+    setState(() {});
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile ||
         connectivityResult == ConnectivityResult.wifi) {
@@ -50,56 +61,6 @@ class _SettingsState extends State<Settings> {
     setState(() {
       user = profile.first;
     });
-  }
-
-  Future hitUpdateProfileAPI() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.mobile ||
-        connectivityResult == ConnectivityResult.wifi) {
-      print('connected');
-    } else if (connectivityResult == ConnectivityResult.none) {
-      Utils.showToast('Please check your Internet Connection');
-      return;
-    }
-    setState(() {
-      isLoading = true;
-    });
-    String urlStr = Constants.updateprofileurl;
-    String playerID = await UserManager.getPlayerId();
-
-    var params = {
-      'playerid': playerID,
-      'push_notifications': 1,
-      'track_location': 0,
-      'biometric': 1
-    };
-    var url = Uri.parse(urlStr);
-    var response = await http.post(
-      url,
-      body: convert.jsonEncode(params),
-    );
-    List resp = convert.jsonDecode(response.body);
-    String alertMsg = "Something went wrong";
-    String statusMsg = "Success";
-    if (resp.length > 0) {
-      alertMsg = resp[0]['message'];
-      statusMsg = resp[0]['Status'];
-    }
-    setState(() {
-      isLoading = false;
-    });
-    if (response.statusCode == 200) {
-      if (statusMsg == "Success") {
-        Utils.showAndroidDialog(context, title: statusMsg, message: alertMsg,
-            okCallback: () {
-          Navigator.pop(context);
-        });
-      } else {
-        Utils.showAndroidDialog(context, title: statusMsg, message: alertMsg);
-      }
-    } else {
-      Utils.showAndroidDialog(context, title: statusMsg, message: alertMsg);
-    }
   }
 
   @override
@@ -158,8 +119,10 @@ class _SettingsState extends State<Settings> {
           CupertinoSwitch(
               value: isBiometricON,
               onChanged: (newvalue) {
-                setState(() {
+                setState(() async {
                   isBiometricON = newvalue;
+                  final prefs = await SharedPreferences.getInstance();
+                  prefs.setBool(Constants.isBioOn, newvalue);
                 });
               })
         ],
