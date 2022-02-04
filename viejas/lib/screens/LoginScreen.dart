@@ -84,6 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
             cancelTitle: 'No',
             showCancelButton: true,
             okCallback: () {
+              prefs.setBool(Constants.isBioOn, true);
               setupTouchID(false);
             },
             cancelCallback: () {
