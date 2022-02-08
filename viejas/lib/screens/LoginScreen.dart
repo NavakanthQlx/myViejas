@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:viejas/constants/constants.dart';
 import 'package:viejas/helpers/local_auth_api.dart';
@@ -26,6 +27,61 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _playerId = new TextEditingController();
   TextEditingController _password = new TextEditingController();
   bool isLoading = false;
+  late double latitude;
+  late double longitude;
+
+  Future<void> getCurrentLocation() async {
+    try {
+      bool serviceEnabled;
+      LocationPermission permission;
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        print('Location services are disabled.');
+      }
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          print('Location permissions are denied');
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        print(
+            'Location permissions are permanently denied, we cannot request permissions.');
+      }
+
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.low);
+      // return position;
+      print("position is -> $position");
+      latitude = position.latitude;
+      longitude = position.longitude;
+      print('Lat long is $latitude and $longitude');
+      hitTrackLocationAPI();
+    } catch (e) {
+      print('error -> $e');
+      return Future.error(e);
+    }
+  }
+
+  Future hitTrackLocationAPI() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
+      print('connected');
+    } else if (connectivityResult == ConnectivityResult.none) {
+      // Utils.showToast('Please check your Internet Connection');
+      return;
+    }
+    final prefs = await SharedPreferences.getInstance();
+    var playerId = prefs.getString(Constants.userID);
+    String urlStr =
+        "${Constants.baseurl}trackplayerlocation.php?player_id=$playerId&latitude=$latitude&longitude=$longitude";
+    var response = await http.get(Uri.parse(urlStr));
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+  }
 
   Future hitLoginAPI() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -40,11 +96,12 @@ class _LoginScreenState extends State<LoginScreen> {
       isLoading = true;
     });
     String urlStr = Constants.loginurl;
+    var onesignalid = await UserManager.getOneSignalId();
     var params = {
       "username": _playerId.text,
       "password": _password.text,
       "device_id": "",
-      "onesignal_id": "d93bd7f2-62d9-11ec-bcd4-027c4bea2c61"
+      "onesignal_id": onesignalid
     };
     var url = Uri.parse(urlStr);
     var response = await http.post(
@@ -66,6 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (response.statusCode == 200) {
       if (statusMsg == "Success") {
         saveUserDatainDefaultsandKeychain(resp);
+        getCurrentLocation();
         final prefs = await SharedPreferences.getInstance();
         var isBioON = prefs.getBool(Constants.isBioOn);
         if (isBioON != null) {

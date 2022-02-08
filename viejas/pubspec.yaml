@@ -41,6 +41,7 @@ dependencies:
   app_settings: ^4.1.1
   local_auth: ^1.1.10
   flutter_secure_storage: ^5.0.2
+  geolocator: ^7.4.0
 
 dev_dependencies:
   flutter_test:
