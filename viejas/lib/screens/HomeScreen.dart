@@ -181,25 +181,36 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Container(
                   height: double.infinity,
-                  child: CachedNetworkImage(
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) => Center(
-                      child: Stack(alignment: Alignment.center, children: [
-                        Container(
-                          height: double.infinity,
-                          child: Image(
+                  child: users[index].serviceIcon == ""
+                      ? Container(
+                          height: 280.0,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
                               fit: BoxFit.cover,
-                              image:
-                                  AssetImage('images/placeholderimage.jpeg')),
+                              image: AssetImage('images/temp.png'),
+                            ),
+                          ),
+                        )
+                      : CachedNetworkImage(
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => Center(
+                            child:
+                                Stack(alignment: Alignment.center, children: [
+                              Container(
+                                height: double.infinity,
+                                child: Image(
+                                    fit: BoxFit.cover,
+                                    image: AssetImage(
+                                        'images/placeholderimage.jpeg')),
+                              ),
+                              Container(
+                                  height: 20,
+                                  width: 20,
+                                  child: const CircularProgressIndicator()),
+                            ]),
+                          ),
+                          imageUrl: users[index].serviceIcon,
                         ),
-                        Container(
-                            height: 20,
-                            width: 20,
-                            child: const CircularProgressIndicator()),
-                      ]),
-                    ),
-                    imageUrl: users[index].serviceIcon,
-                  ),
                 ),
                 Container(
                   alignment: Alignment.center,
@@ -241,27 +252,37 @@ class _HomeScreenState extends State<HomeScreen> {
         alignment: Alignment.center,
         height: 230.0,
         width: double.infinity,
-        child: CachedNetworkImage(
-          height: double.infinity,
-          width: double.infinity,
-          fit: BoxFit.cover,
-          placeholder: (context, url) => Center(
-            child: Stack(alignment: Alignment.center, children: [
-              Container(
+        child: casinoListObj?.logo == null || casinoListObj?.logo == ""
+            ? Container(
+                height: 280.0,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage('images/temp.png'),
+                  ),
+                ),
+              )
+            : CachedNetworkImage(
                 height: double.infinity,
                 width: double.infinity,
-                child: Image(
-                    fit: BoxFit.cover,
-                    image: AssetImage('images/placeholderimage.jpeg')),
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Center(
+                  child: Stack(alignment: Alignment.center, children: [
+                    Container(
+                      height: double.infinity,
+                      width: double.infinity,
+                      child: Image(
+                          fit: BoxFit.cover,
+                          image: AssetImage('images/placeholderimage.jpeg')),
+                    ),
+                    Container(
+                        height: 20,
+                        width: 20,
+                        child: const CircularProgressIndicator()),
+                  ]),
+                ),
+                imageUrl: casinoListObj?.logo ?? '',
               ),
-              Container(
-                  height: 20,
-                  width: 20,
-                  child: const CircularProgressIndicator()),
-            ]),
-          ),
-          imageUrl: casinoListObj?.logo ?? '',
-        ),
       ),
       Container(
         alignment: Alignment.topLeft,
