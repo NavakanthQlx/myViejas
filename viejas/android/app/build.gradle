@@ -32,6 +32,14 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
+    signingConfigs {
+        release {
+            keyAlias 'myViejas'
+            keyPassword 'myViejas'
+            storeFile file('myViejas.jks')
+            storePassword 'myViejas'
+        }
+    }
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
@@ -48,7 +56,11 @@ android {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+           // signingConfig signingConfigs.debug
+
+            signingConfig signingConfigs.release
+            shrinkResources false
+            minifyEnabled false
         }
     }
 }
