@@ -97,10 +97,13 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     String urlStr = Constants.loginurl;
     var onesignalid = await UserManager.getOneSignalId();
+    var deviceid = await UserManager.getDeviceId();
+    print('My Device ID ${deviceid}');
+
     var params = {
       "username": _playerId.text,
       "password": _password.text,
-      "device_id": "",
+      "device_id": deviceid,//"",
       "onesignal_id": onesignalid
     };
     var url = Uri.parse(urlStr);
@@ -178,6 +181,9 @@ class _LoginScreenState extends State<LoginScreen> {
     String points = resp[0]['balance'];
     prefs.setString(Constants.points, points);
 
+    String accountid = resp[0]['account_num'];
+    prefs.setString(Constants.accountID, accountid);
+
     await UserSecureStorage.setUsername(_playerId.text);
     await UserSecureStorage.setPassword(_password.text);
   }
@@ -229,15 +235,16 @@ class _LoginScreenState extends State<LoginScreen> {
           message: "You could not be verified; please try again.",
           showCancelButton: false,
           okCallback: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => TabsPage(selectedIndex: 0),
-              ),
-            );
+            // Navigator.pushReplacement(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => TabsPage(selectedIndex: 0),
+            //   ),
+            // );
+            return;
           },
         );
-        return;
+        // Utils.showAndroidDialog(context, message: 'Authentication failed');
       }
     } on PlatformException catch (e) {
       print(e);
@@ -275,6 +282,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     callTouchIDbasedonBio();
+    // var deviceid = UserManager.getDeviceId();
+    // print('My Device ID ${deviceid}');
   }
 
   @override

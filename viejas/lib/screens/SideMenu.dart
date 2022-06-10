@@ -189,6 +189,7 @@ class _SidemenuState extends State<Sidemenu> {
                             prefs.remove(Constants.userName);
                             prefs.remove(Constants.tier);
                             prefs.remove(Constants.points);
+                            prefs.remove(Constants.accountID);
                             // final storage = new FlutterSecureStorage();
                             // await storage.deleteAll();
                             getIsUserLoggedIn();

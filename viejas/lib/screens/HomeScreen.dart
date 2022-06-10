@@ -17,6 +17,7 @@ import 'package:viejas/screens/MyViejas.dart';
 import 'package:viejas/screens/Promotions.dart';
 import 'package:viejas/screens/SideMenu.dart';
 import 'package:viejas/screens/tabspage.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -27,6 +28,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   CasinoList? casinoListObj;
+  var tierPointsDecimal;
 
   Future<dynamic> getDataFromAPI() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -64,7 +66,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       drawer: Sidemenu(),
       appBar: myAppBar(context: context),
-      body: Container(
+      body: RefreshIndicator(
+    onRefresh: () async {
+    await Future.delayed(Duration(seconds: 2));
+    getDataFromAPI();
+    },
+      // body: Container(
         child: Column(
           children: [
             // _buildHeaderImage(),
@@ -112,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
       shrinkWrap: true,
       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 250,
-          childAspectRatio: 3 / 3.7,
+          childAspectRatio: 3 / 2,//3.7,
           crossAxisSpacing: 2,
           mainAxisSpacing: 2),
       itemCount: users.length,
@@ -175,6 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 break;
             }
           },
+
           child: Container(
             child: Stack(
               alignment: Alignment.bottomCenter,
@@ -199,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Container(
                                 height: double.infinity,
                                 child: Image(
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.fitWidth,
                                     image: AssetImage(
                                         'images/placeholderimage.jpeg')),
                               ),
@@ -297,6 +305,8 @@ class _HomeScreenState extends State<HomeScreen> {
             var userArr = prefs.data ?? [];
             if (userArr.length > 0) {
               if (userArr[0] != "") {
+                final value = new NumberFormat("#,##0", "en_US");
+                tierPointsDecimal = value.format(int.parse(userArr[3]));
                 return _buildLoginView(userArr);
               }
             }
@@ -313,7 +323,7 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Welcome \n${userArr[1]}\n${userArr[0]}',
+          'Welcome \n${userArr[1]}\n${userArr[4]}',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         SizedBox(
@@ -331,7 +341,8 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 2,
             ),
             Text(
-              'POINTS : ${userArr[3]}',
+              // 'POINTS : ${userArr[3]}',
+              'POINTS : $tierPointsDecimal',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             TextButton(

@@ -57,7 +57,12 @@ class _OffersState extends State<Offers> {
     return Scaffold(
       drawer: widget.showAppBar ? Sidemenu() : null,
       appBar: myAppBar(context: context),
-      body: Container(child: _buildFuture()),
+      // body: Container(child: _buildFuture()),
+      body: RefreshIndicator(
+    onRefresh: () async {
+    await Future.delayed(Duration(seconds: 2));
+    getDataFromAPI();
+    }, child: _buildFuture(),),
     );
   }
 

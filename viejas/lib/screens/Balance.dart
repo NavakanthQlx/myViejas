@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:connectivity/connectivity.dart';
 import 'package:viejas/model/balance.dart';
 import 'package:viejas/screens/SideMenu.dart';
+import 'package:intl/intl.dart';
 
 class Balance extends StatefulWidget {
   const Balance({Key? key}) : super(key: key);
@@ -19,6 +20,8 @@ class Balance extends StatefulWidget {
 class _BalanceState extends State<Balance> {
   bool isLoading = false;
   BalanceObject? user;
+  var tierPointsDecimal;
+  var redeemablePointsDecimal;
 
   getIsUserLoggedIn() async {
     var isUserLoggedIn = await UserManager.isUserLogin();
@@ -55,6 +58,9 @@ class _BalanceState extends State<Balance> {
     final profile = balanceFromJson(response.body);
     setState(() {
       user = profile.first;
+      final value = new NumberFormat("#,##0", "en_US");
+      redeemablePointsDecimal = value.format(int.parse(user?.redeemablePoints ?? ""));
+      tierPointsDecimal = value.format(int.parse(user?.tierPoints ?? ""));
     });
   }
 
@@ -85,10 +91,14 @@ class _BalanceState extends State<Balance> {
               ),
             ),
             // _buildRow('Comp Balance', user?.compBalance ?? ""),
-            _buildRow('Redeemable Points', user?.redeemablePoints ?? ""),
-            _buildRow('Tier Points', user?.tierPoints ?? ""),
+            // _buildRow('Redeemable Points', user?.redeemablePoints ?? ""),
+            // _buildRow('Tier Points', user?.tierPoints ?? ""),
+            _buildRow('Redeemable Points', redeemablePointsDecimal),
+            _buildRow('Tier Points', tierPointsDecimal),
             _buildRow('Current Tier', user?.currentTier ?? ""),
             _buildRow('Tier Expiration', user?.tierExpiration ?? ""),
+            _buildRow('AsOf', user?.asOf ?? ""),
+            _buildRow('TicketStubs', user?.ticketStubs ?? ""),
           ],
         ),
       ),

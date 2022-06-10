@@ -7,6 +7,7 @@ import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:viejas/screens/ChangePassword.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({Key? key}) : super(key: key);
@@ -17,11 +18,17 @@ class ForgetPasswordScreen extends StatefulWidget {
 
 class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   TextEditingController _playerId = new TextEditingController();
-  TextEditingController _email = new TextEditingController();
+  // TextEditingController _email = new TextEditingController();
   TextEditingController _zipcode = new TextEditingController();
   bool isViejasChecked = false;
   DateTime? _chosenDateTime;
   bool isLoading = false;
+
+  // Future hitForgotPasswordAPI() async {
+  //   Navigator.push(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => ChangePasswordScreen()));
+  // }
 
   Future hitForgotPasswordAPI() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -35,12 +42,12 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     setState(() {
       isLoading = true;
     });
-    String urlStr = Constants.signupurl;
+    String urlStr = Constants.forgotpasswordurl;
     var params = {
       'playerclubid': _playerId.text,
       'dob': DateFormat('yyyy-MM-dd').format(_chosenDateTime ?? DateTime.now()),
       'zipcode': _zipcode.text,
-      'emailaddress': _email.text
+      // 'emailaddress': _email.text
     };
     var url = Uri.parse(urlStr);
     var response = await http.post(
@@ -61,10 +68,18 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     });
     if (response.statusCode == 200) {
       if (statusMsg == "Success") {
-        Utils.showAndroidDialog(context, title: statusMsg, message: alertMsg,
+        Utils.showAndroidDialog(this.context, title: statusMsg, message: alertMsg,
             okCallback: () {
-          Navigator.pop(context);
-        });
+            });
+        if (alertMsg == "Success"){
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ChangePasswordScreen()));
+        }
+        // Utils.showAndroidDialog(context, title: statusMsg, message: alertMsg,
+        //     okCallback: () {
+          // Navigator.pop(context);
+        // });
       } else {
         Utils.showAndroidDialog(context, title: statusMsg, message: alertMsg);
       }
@@ -119,19 +134,19 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
       Utils.showAndroidDialog(context, message: 'Please enter Member ID');
       return;
     }
-    if (_email.text.isEmpty) {
-      Utils.showAndroidDialog(context, message: 'Please enter email address');
-      return;
-    }
-
-    bool emailValid = RegExp(
-            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-        .hasMatch(_email.text);
-    if (!emailValid) {
-      Utils.showAndroidDialog(context,
-          message: 'Please enter valid email address');
-      return;
-    }
+    // if (_email.text.isEmpty) {
+    //   Utils.showAndroidDialog(context, message: 'Please enter email address');
+    //   return;
+    // }
+    //
+    // bool emailValid = RegExp(
+    //         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+    //     .hasMatch(_email.text);
+    // if (!emailValid) {
+    //   Utils.showAndroidDialog(context,
+    //       message: 'Please enter valid email address');
+    //   return;
+    // }
 
     if (_chosenDateTime == null) {
       Utils.showAndroidDialog(context, message: 'Please enter date of Birth');
@@ -209,8 +224,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                             _buildTFTitle('Member #:'),
                             _buildTextField(
                                 _playerId, TextInputType.emailAddress),
-                            _buildTFTitle('Email Address:'),
-                            _buildTextField(_email, TextInputType.emailAddress),
+                            // _buildTFTitle('Email Address:'),
+                            // _buildTextField(_email, TextInputType.emailAddress),
                             _buildTFTitle('Date of Birth:'),
                             _buildDateOfBirthButton(context),
                             _buildTFTitle('Zipcode:'),

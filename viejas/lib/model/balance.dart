@@ -14,6 +14,8 @@ class BalanceObject {
     required this.tierPoints,
     required this.currentTier,
     required this.tierExpiration,
+    required this.asOf,
+    required this.ticketStubs,
   });
 
   final String compBalance;
@@ -21,6 +23,8 @@ class BalanceObject {
   final String tierPoints;
   final String currentTier;
   final String tierExpiration;
+  final String asOf;
+  final String ticketStubs;
 
   factory BalanceObject.fromJson(Map<String, dynamic> json) => BalanceObject(
         compBalance: json["comp_balance"],
@@ -28,6 +32,8 @@ class BalanceObject {
         tierPoints: json["tier_points"],
         currentTier: json["current_tier"],
         tierExpiration: json["tier_expiration"],
+        asOf: json["as_of"] + " CST",
+        ticketStubs: json["TicketStubs"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -36,5 +42,7 @@ class BalanceObject {
         "tier_points": tierPoints,
         "current_tier": currentTier,
         "tier_expiration": tierExpiration,
+        "as_of": asOf,
+        "TicketStubs": ticketStubs,
       };
 }
